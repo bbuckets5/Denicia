@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Click eTickets - Tickets One Click Away</title>
+    
+    <link rel="stylesheet" href="style.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+</head>
+<body>
+
+    <div class="container">
+
+        <header class="main-header">
+            <a href="index.html" class="logo-link">
+                <div class="logo-area">
+                    <img class="logo-img" src="https://placehold.co/180x50/ffffff/4a00e0?text=Logo" alt="logo">
+                    <p class="tagline">Click eTickets: "Click It For Ticket!"</p>
+                </div>
+            </a>
+            
+            <nav class="main-nav">
+                <div class="user-dropdown-wrapper">
+                    <a href="#" class="nav-icon-link" aria-label="User Account" id="user-icon-toggle">
+                        <i class="fas fa-user-circle"></i>
+                    </a>
+                    <div class="user-dropdown-menu glass">
+                        <a href="login.html" id="loginLink">Log In</a>
+                        <a href="signup.html" id="signupLink">Sign Up</a>
+                        <a href="mytickets.html" id="myTicketsLink" style="display: none;">My Tickets</a>
+                        <a href="myprofile.html" id="profileLink" style="display: none;">Profile</a>
+                        <a href="#" id="logoutLink" style="display: none;">Log Out</a>
+                    </div>
+                </div>
+
+                <div class="cart-dropdown-wrapper">
+                    <a href="#" class="nav-icon-link" aria-label="Shopping Cart" id="cart-icon-toggle">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count">0</span>
+                    </a>
+                    <div class="cart-dropdown-menu glass">
+                        <div id="cart-items-list">
+                            <p class="cart-empty-msg">Your cart is empty.</p>
+                        </div>
+                        <div class="cart-footer">
+                            <a href="checkout.html" class="cta-button checkout-btn">Continue to Checkout</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <main class="main-content">
+            <h1>Events!</h1>
+
+            <div class="search-container">
+                <input type="search" id="event-search" placeholder="Search for events by name...">
+            </div>
+            
+            <div class="event-grid" id="event-list-container">
+                
+                <a href="event-details.html" class="event-link">
+                    <div class="event-card glass">
+                        <img src="https://images.unsplash.com/photo-1519750157634-b6d4e74a1f7b?q=80&w=1974" alt="Colorful abstract light trails">
+                        <h3>Summer Music Fest</h3>
+                        <p>Date: August 5, 2025</p>
+                        <p class="price">$75.00</p>
+                    </div>
+                </a>
+
+                <a href="event-details.html" class="event-link">
+                    <div class="event-card glass">
+                        <img src="https://images.unsplash.com/photo-1505236858219-8359eb29e329?q=80&w=2162" alt="People around a bonfire on a beach at dusk">
+                        <h3>Beachside Bonfire Party</h3>
+                        <p>Date: August 12, 2025</p>
+                        <p class="price">$25.00</p>
+                    </div>
+                </a>
+
+                <a href="event-details.html" class="event-link">
+                    <div class="event-card glass">
+                        <img src="https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?q=80&w=1974" alt="Crowd at a concert with purple stage lights">
+                        <h3>Live Arena Concert</h3>
+                        <p>Date: August 18, 2025</p>
+                        <p class="price">$120.00</p>
+                    </div>
+                </a>
+                
+            </div>
+
+            <section class="cta-section">
+                <a href="ticket-form.html" class="cta-button">Ticket Your Event</a>
+            </section>
+        </main>
+
+        <footer class="main-footer glass">
+            <div class="footer-column">
+                <h4>Resources</h4>
+                <a href="index.html">Home</a>
+                <a href="#about">About</a>
+                <a href="#terms">Terms and Conditions</a>
+                <a href="#privacy">Privacy Policy</a>
+                <a href="#purchase">Purchase Policy</a>
+            </div>
+            <div class="footer-column">
+                <h4>Let's Connect</h4>
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i> Facebook</a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i> Instagram</a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i> Twitter</a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h4>Contact Us</h4>
+                <p>contact@clicketickets.com</p>
+                <p>(242) 555-0123</p>
+            </div>
+        </footer>
+
+    </div>
+
+    <script src="script.js" defer></script>
+    <script src="promoter-form.js" defer></script> 
+</body>
+</html>

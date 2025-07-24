@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Click eTickets</title>
+    
+    <link rel="stylesheet" href="style.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+    <div class="container">
+
+        <header class="main-header">
+            <a href="index.html" class="logo-link">
+                <div class="logo-area">
+                    <img class="logo-img" src="https://placehold.co/180x50/ffffff/4a00e0?text=Logo" alt="logo">
+                    <p class="tagline">Click eTickets: "Click It For Ticket!"</p>
+                </div>
+            </a>
+            <nav class="main-nav">
+                <div class="user-dropdown-wrapper">
+                    <a href="#" class="nav-icon-link" aria-label="User Account" id="user-icon-toggle">
+                        <i class="fas fa-user-circle"></i>
+                    </a>
+                    <div class="user-dropdown-menu glass">
+                        <a href="login.html" id="loginLink">Log In</a>
+                        <a href="signup.html" id="signupLink">Sign Up</a>
+                        <a href="mytickets.html" id="myTicketsLink" style="display: none;">My Tickets</a>
+                        <a href="myprofile.html" id="profileLink" style="display: none;">Profile</a>
+                        <a href="#" id="logoutLink" style="display: none;">Log Out</a>
+                    </div>
+                </div>
+                <div class="cart-dropdown-wrapper">
+                    <a href="#" class="nav-icon-link" aria-label="Shopping Cart" id="cart-icon-toggle">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count">0</span>
+                    </a>
+                    <div class="cart-dropdown-menu glass">
+                        <div id="cart-items-list">
+                            <p class="cart-empty-msg">Your cart is empty.</p>
+                        </div>
+                        <div class="cart-footer">
+                            <a href="checkout.html" class="cta-button checkout-btn">Continue to Checkout</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <main class="main-content">
+            <h1>Checkout</h1>
+            
+            <div class="checkout-layout">
+                <div class="checkout-form-container glass">
+                    <form id="payment-form">
+                        <h3>Billing Information</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="firstName">First Name</label>
+                                <input type="text" id="firstName" name="firstName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="lastName">Last Name</label>
+                                <input type="text" id="lastName" name="lastName" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmEmail">Confirm Email Address</label>
+                            <input type="email" id="confirmEmail" name="confirmEmail" required>
+                            <span class="email-match-message"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Telephone Number</label>
+                            <input type="tel" id="phone" name="phone" required>
+                        </div>
+                        
+                        <h3 class="payment-header">Payment Details</h3>
+                        <div class="form-group">
+                            <label for="cardNumber">Card Number</label>
+                            <input type="text" id="cardNumber" name="cardNumber" placeholder="0000 0000 0000 0000" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="expiryDate">Expiry Date</label>
+                                <input type="text" id="expiryDate" name="expiryDate" placeholder="MM / YY" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="cvc">CVC</label>
+                                <input type="text" id="cvc" name="cvc" placeholder="123" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="cta-button form-submit-btn">Complete Purchase</button>
+                    </form>
+                </div>
+
+                <div class="order-summary-container glass">
+                    <h3>Order Summary</h3>
+                    <div class="summary-items">
+                        <div class="summary-item">
+                            <span class="summary-item-name">Summer Music Fest (VIP Access)</span>
+                            <span class="summary-item-price">$150.00</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-item-name">Beachside Bonfire (General) x2</span>
+                            <span class="summary-item-price">$50.00</span>
+                        </div>
+                    </div>
+                    <div class="summary-calculations">
+                        <div class="summary-line">
+                            <span>Subtotal</span>
+                            <span>$200.00</span>
+                        </div>
+                        <div class="summary-line">
+                            <span>Service Fee (5%)</span>
+                            <span>$10.00</span>
+                        </div>
+                    </div>
+                    <div class="summary-total">
+                        <span class="summary-total-label">Total</span>
+                        <span class="summary-total-price">$210.00</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="main-footer glass">
+            <div class="footer-column">
+                <h4>Resources</h4>
+                <a href="index.html">Home</a>
+                <a href="#terms">Terms and Conditions</a>
+                <a href="#privacy">Privacy Policy</a>
+            </div>
+            <div class="footer-column">
+                <h4>Let's Connect</h4>
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i> Facebook</a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i> Instagram</a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i> Twitter</a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h4>Contact Us</h4>
+                <p>contact@clicketickets.com</p>
+                <p>(242) 555-0123</p>
+            </div>
+        </footer>
+
+    </div>
+    <script src="script.js" defer></script>
+</body>
+</html>

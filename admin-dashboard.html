@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Click eTickets</title>
+    
+    <link rel="stylesheet" href="style.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+</head>
+<body>
+
+    <div class="container">
+
+        <header class="main-header">
+            <a href="index.html" class="logo-link">
+                <div class="logo-area">
+                    <img class="logo-img" src="https://placehold.co/180x50/ffffff/4a00e0?text=Logo" alt="logo">
+                    <p class="tagline">Click eTickets: "Click It For Ticket!"</p>
+                </div>
+            </a>
+            
+            <nav class="main-nav">
+                <div class="user-dropdown-wrapper">
+                    <a href="#" class="nav-icon-link" aria-label="User Account" id="user-icon-toggle">
+                        <i class="fas fa-user-circle"></i>
+                    </a>
+                    <div class="user-dropdown-menu glass">
+                        <a href="login.html" id="loginLink">Log In</a>
+                        <a href="signup.html" id="signupLink">Sign Up</a>
+                        <a href="mytickets.html" id="myTicketsLink" style="display: none;">My Tickets</a>
+                        <a href="myprofile.html" id="profileLink" style="display: none;">Profile</a>
+                        <a href="#" id="logoutLink" style="display: none;">Log Out</a>
+                    </div>
+                </div>
+
+                <div class="cart-dropdown-wrapper">
+                    <a href="#" class="nav-icon-link" aria-label="Shopping Cart" id="cart-icon-toggle">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count">0</span>
+                    </a>
+                    <div class="cart-dropdown-menu glass">
+                        <div id="cart-items-list">
+                            <p class="cart-empty-msg">Your cart is empty.</p>
+                        </div>
+                        <div class="cart-footer">
+                            <a href="checkout.html" class="cta-button checkout-btn">Continue to Checkout</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <main class="main-content">
+            <h1>Admin Dashboard</h1>
+
+            <div class="tabs-nav">
+                <button class="tab-btn active" data-target="manage-events">Manage Events</button>
+                <button class="tab-btn" data-target="manage-users">Manage Users</button>
+                </div>
+            
+            <div id="manage-events" class="admin-section glass">
+                <h2>Event Management</h2>
+                <p>Use this section to add, edit, or delete events.</p>
+
+                <div class="admin-card">
+                    <h3>Add New Event</h3>
+                    <form id="add-event-form" class="admin-form">
+                        <div class="form-group">
+                            <label for="newEventName">Event Name</label>
+                            <input type="text" id="newEventName" name="eventName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="newEventDate">Event Date</label>
+                            <input type="date" id="newEventDate" name="eventDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="newEventLocation">Location</label>
+                            <input type="text" id="newEventLocation" name="eventLocation" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="newEventDescription">Description</label>
+                            <textarea id="newEventDescription" name="eventDescription" rows="4" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="newEventPrice">Default Ticket Price</label>
+                            <input type="number" id="newEventPrice" name="eventPrice" min="0" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="newEventImage">Event Image URL (for now, will use file upload later)</label>
+                            <input type="text" id="newEventImage" name="eventImage" placeholder="https://example.com/image.jpg" required>
+                        </div>
+                        <button type="submit" class="cta-button form-submit-btn">Add Event</button>
+                    </form>
+                </div>
+
+                <div class="admin-card">
+                    <h3>Existing Events</h3>
+                    <div id="existing-events-list">
+                        <p class="empty-msg">No events to display. Add some above!</p>
+                        </div>
+                </div>
+            </div>
+
+            <div id="manage-users" class="admin-section glass hidden">
+                <h2>User Management</h2>
+                <p>View and manage user accounts.</p>
+                <div class="admin-card">
+                    <h3>Registered Users</h3>
+                    <div id="registered-users-list">
+                        <p class="empty-msg">No users to display.</p>
+                        </div>
+                </div>
+            </div>
+
+            </main>
+
+        <footer class="main-footer glass">
+            <div class="footer-column">
+                <h4>Resources</h4>
+                <a href="index.html">Home</a>
+                <a href="#terms">Terms and Conditions</a>
+                <a href="#privacy">Privacy Policy</a>
+            </div>
+            <div class="footer-column">
+                <h4>Let's Connect</h4>
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i> Facebook</a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i> Instagram</a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i> Twitter</a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h4>Contact Us</h4>
+                <p>contact@clicketickets.com</p>
+                <p>(242) 555-0123</p>
+            </div>
+        </footer>
+
+    </div>
+    
+    <script src="script.js" defer></script>
+    <script src="admin.js" defer></script> 
+
+</body>
+</html>

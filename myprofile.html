@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - Click eTickets</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        
+        <header class="main-header">
+            <a href="index.html" class="logo-link">
+                <div class="logo-area">
+                    <img class="logo-img" src="https://placehold.co/180x50/ffffff/4a00e0?text=Logo" alt="logo">
+                    <p class="tagline">Click eTickets: "Click It For Ticket!"</p>
+                </div>
+            </a>
+            <nav class="main-nav">
+                <div class="user-dropdown-wrapper">
+                    <a href="#" class="nav-icon-link" aria-label="User Account" id="user-icon-toggle">
+                        <i class="fas fa-user-circle"></i>
+                    </a>
+                    <div class="user-dropdown-menu glass">
+                        <a href="login.html" id="loginLink">Log In</a>
+                        <a href="signup.html" id="signupLink">Sign Up</a>
+                        <a href="mytickets.html" id="myTicketsLink" style="display: none;">My Tickets</a>
+                        <a href="myprofile.html" id="profileLink" style="display: none;">Profile</a>
+                        <a href="#" id="logoutLink" style="display: none;">Log Out</a>
+                    </div>
+                </div>
+                <div class="cart-dropdown-wrapper">
+                    <a href="#" class="nav-icon-link" aria-label="Shopping Cart" id="cart-icon-toggle">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count">0</span>
+                    </a>
+                    <div class="cart-dropdown-menu glass">
+                        <div id="cart-items-list">
+                            <p class="cart-empty-msg">Your cart is empty.</p>
+                        </div>
+                        <div class="cart-footer">
+                            <a href="checkout.html" class="cta-button checkout-btn">Continue to Checkout</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <main class="main-content">
+            <h1>My Profile</h1>
+
+            <div class="profile-section glass">
+                <h2>Account Details</h2>
+                <div class="user-info">
+                    <p><strong>Name:</strong> <span id="profileFirstName"></span> <span id="profileLastName"></span></p>
+                    <p><strong>Email:</strong> <span id="profileEmail"></span></p>
+                    </div>
+                </div>
+            <div class="profile-accordion glass">
+
+                <div class="accordion-item">
+                    <button class="accordion-trigger">
+                        <div class="trigger-left"><i class="fas fa-key"></i><span>Change Password</span></div>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="accordion-content hidden">
+                        <form id="change-password-form" class="accordion-form">
+                            <div class="form-group"><label for="currentPassword">Current Password</label><input type="password" id="currentPassword" required></div>
+                            <div class="form-group"><label for="newPassword">New Password</label><input type="password" id="newPassword" required></div>
+                            <div class="form-group"><label for="confirmNewPassword">Confirm New Password</label><input type="password" id="confirmNewPassword" required></div>
+                            <button type="submit" class="cta-button form-submit-btn">Update Password</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-trigger">
+                        <div class="trigger-left"><i class="fas fa-ticket-alt"></i><span>View My Tickets</span></div>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="accordion-content hidden">
+                        <div class="ticket-item">
+                            <div class="ticket-details">
+                                <h3>Summer Music Fest</h3>
+                                <p><i class="fas fa-calendar-alt"></i> August 5, 2025</p>
+                                <p class="ticket-type-info">VIP Access (x1)</p>
+                            </div>
+                            <div class="ticket-qr-code">
+                                <img src="https://placehold.co/100x100/ffffff/4a00e0?text=QR" alt="QR Code">
+                            </div>
+                        </div>
+                        <a href="mytickets.html" class="cta-button view-all-btn">View All Tickets</a>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-trigger">
+                        <div class="trigger-left"><i class="fas fa-credit-card"></i><span>Payment Methods</span></div>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="accordion-content hidden">
+                        <div class="payment-method">
+                            <span>Visa ending in 1234</span>
+                            <button class="remove-payment-btn">Remove</button>
+                        </div>
+                        <button class="cta-button add-payment-btn">Add New Card</button>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+        <footer class="main-footer glass">
+            <div class="footer-column">
+                <h4>Resources</h4>
+                <a href="index.html">Home</a>
+                <a href="#terms">Terms and Conditions</a>
+                <a href="#privacy">Privacy Policy</a>
+            </div>
+            <div class="footer-column">
+                <h4>Let's Connect</h4>
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i> Facebook</a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i> Instagram</a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i> Twitter</a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h4>Contact Us</h4>
+                <p>contact@clicketickets.com</p>
+                <p>(242) 555-0123</p>
+            </div>
+        </footer>
+        
+    </div>
+    <script src="script.js" defer></script>
+</body>
+</html>

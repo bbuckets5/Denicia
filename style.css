@@ -1,0 +1,1212 @@
+/*
+================================================================================
+  File: style.css
+  Project: Click eTickets
+  Description: Master stylesheet for the Click eTickets website. (FINAL VERSION)
+================================================================================
+*/
+
+/* SECTION 1: CSS Variables (Root) */
+:root {
+    --primary-color: #00e5ff;
+    --primary-shadow: rgba(0, 229, 255, 0.4);
+    --border-radius-main: 15px;
+    --border-radius-small: 10px;
+    --glass-bg-light: rgba(255, 255, 255, 0.1);
+    --glass-bg-dark: rgba(0, 0, 0, 0.1);
+}
+
+
+/* SECTION 2: Global and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    background: linear-gradient(135deg, #4a00e0, #8e2de2);
+    background-size: cover;
+    background-attachment: fixed;
+    color: #ffffff;
+    min-height: 100vh;
+    line-height: 1.6;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+
+/* SECTION 3: Reusable Styles */
+.glass {
+    background: var(--glass-bg-light);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: var(--border-radius-main);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+}
+
+
+/* SECTION 4: Header and Footer */
+.logo-link, .event-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 30px;
+    margin-top: 20px;
+}
+
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.tagline {
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.main-nav {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.nav-icon-link {
+    color: #ffffff;
+    font-size: 1.8rem;
+    text-decoration: none;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.nav-icon-link:hover {
+    color: var(--primary-color);
+}
+
+.cart-count {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background-color: var(--primary-color);
+    color: #000000;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 50%;
+    line-height: 1;
+    min-width: 18px;
+    text-align: center;
+}
+
+.user-dropdown-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.user-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    min-width: 160px;
+    padding: 10px 0;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+}
+
+.user-dropdown-menu.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.user-dropdown-menu a {
+    color: #ffffff;
+    padding: 10px 20px;
+    text-decoration: none;
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 700;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.user-dropdown-menu a:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: var(--primary-color);
+}
+
+.cart-dropdown-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.cart-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    width: 320px;
+    padding: 15px;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+}
+
+.cart-dropdown-menu.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.cart-empty-msg {
+    text-align: center;
+    padding: 20px 0;
+    font-weight: 600;
+}
+
+#cart-items-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.cart-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.cart-item-info h4 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin: 0 0 5px 0;
+}
+
+.cart-item-info p {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.8);
+    text-shadow: none;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.cart-item .remove-from-cart-btn {
+    background: none;
+    border: none;
+    color: #ff4d4d;
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.cart-item .remove-from-cart-btn:hover {
+    color: #ff0000;
+} /* Added hover for remove button */
+
+
+.cart-footer {
+    padding-top: 15px;
+    margin-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    text-align: center;
+}
+
+.main-footer {
+    display: flex;
+    justify-content: space-between;
+    padding: 40px 30px;
+    margin: 40px 0 20px 0;
+}
+
+.footer-column {
+    flex: 1;
+    padding: 0 20px;
+}
+
+.footer-column h4 {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+.footer-column a, .footer-column p {
+    display: block;
+    color: #ffffff;
+    text-decoration: none;
+    margin-bottom: 10px;
+    font-weight: 400;
+    transition: color 0.3s;
+}
+
+.footer-column a {
+    font-weight: 700;
+}
+
+.footer-column a:hover {
+    color: var(--primary-color);
+}
+
+.social-icons a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+    text-decoration: none;
+    color: #ffffff;
+    font-weight: 700;
+    transition: color 0.3s;
+}
+
+.social-icons a:hover {
+    color: var(--primary-color);
+}
+
+.social-icons a i {
+    font-size: 1.2rem;
+}
+
+
+/* SECTION 5: Main Content */
+.main-content {
+    text-align: center;
+    padding: 20px 0;
+}
+
+.main-content h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 40px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.event-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+.event-card {
+    padding: 20px;
+    text-align: left;
+    transition: transform 0.3s ease;
+}
+
+.event-card:hover {
+    transform: translateY(-10px);
+}
+
+.event-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: var(--border-radius-small);
+    margin-bottom: 15px;
+}
+
+.event-card h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.event-card p {
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+}
+
+.event-card .price {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+
+/* SECTION 6: Buttons */
+.cta-section {
+    padding: 50px 0;
+}
+
+.cta-button {
+    display: inline-block;
+    background: var(--primary-color);
+    color: #000000;
+    padding: 15px 40px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: 700;
+    box-shadow: 0 8px 20px var(--primary-shadow);
+    transition: all 0.3s ease;
+}
+
+.cta-button:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px var(--primary-shadow);
+}
+
+.cta-button.checkout-btn {
+    width: auto;
+    font-size: 0.9rem;
+    padding: 10px 25px;
+}
+
+.cta-button.form-submit-btn {
+    font-size: 1.1rem;
+    padding: 12px 30px;
+}
+
+
+/* SECTION 7: Forms */
+.search-container {
+    margin-bottom: 40px;
+}
+
+#event-search {
+    width: 100%;
+    max-width: 500px;
+    padding: 12px;
+    background: var(--glass-bg-dark);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50px;
+    color: #ffffff;
+    font-size: 1rem;
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+}
+
+#event-search:focus-visible {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 10px var(--primary-shadow);
+}
+
+.form-description {
+    margin-bottom: 40px;
+    font-size: 1.1rem;
+    font-weight: 400;
+}
+
+.form-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px;
+    text-align: left;
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="tel"],
+.form-group input[type="password"],
+.form-group input[type="number"],
+.form-group input[type="date"],
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    background: var(--glass-bg-dark);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    font-family: 'Poppins', sans-serif;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
+}
+
+.form-group small {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.7);
+    text-shadow: none;
+}
+
+.form-group input:focus-visible,
+.form-group textarea:focus-visible {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 10px var(--primary-shadow);
+}
+
+.form-group input[type="file"] {
+    width: 100%;
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.form-group input[type="file"]::file-selector-button {
+    padding: 10px 15px;
+    margin-right: 15px;
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.form-group input[type="file"]::file-selector-button:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.form-submit-btn {
+    width: 100%;
+    margin-top: 15px;
+    border: none;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.ticket-type-entry {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--border-radius-small);
+    background: var(--glass-bg-dark);
+}
+
+.ticket-type-entry .ticket-label {
+    flex: 2;
+    min-width: 150px;
+}
+
+.ticket-type-entry .ticket-price-input {
+    flex: 1;
+    min-width: 100px;
+}
+
+.ticket-type-entry .ticket-inclusions {
+    flex-basis: 100%;
+    min-height: 80px;
+    resize: vertical;
+}
+
+.remove-ticket-btn {
+    padding: 8px 15px;
+    font-size: 0.85rem;
+    margin-top: 5px;
+    background: rgba(255, 0, 0, 0.5);
+    border-radius: 5px;
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+}
+
+.remove-ticket-btn:hover {
+    background: rgba(255, 0, 0, 0.7);
+}
+
+
+/* SECTION 8: Responsive Design */
+@media (max-width: 992px) {
+    .event-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .profile-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .logo-area {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .event-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .main-footer {
+        flex-direction: column;
+        text-align: center;
+        gap: 30px;
+    }
+
+    /* This rule was already present and good for smaller screens */
+    .event-details-container {
+        flex-direction: column;
+        padding: 20px;
+        gap: 20px; /* Ensure consistent gap when stacked */
+    }
+
+    .event-info-box h1 {
+        font-size: 2rem;
+    }
+
+    .ticket-options-list {
+        grid-template-columns: 1fr;
+    }
+
+    .ticket-type-entry {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .ticket-type-entry .ticket-label,
+    .ticket-type-entry .ticket-price-input {
+        width: 100%;
+    }
+    
+    .checkout-layout {
+        flex-direction: column-reverse;
+    }
+}
+
+@media (max-width: 480px) {
+    .cta-button {
+        padding: 12px 25px;
+        font-size: 1rem;
+    }
+}
+
+
+/* SECTION 9: Event Details Page */
+/* Default for mobile-first: Stacked layout */
+.event-details-container {
+    display: flex;
+    flex-direction: column; /* Default: stack items vertically */
+    gap: 20px; /* Gap when stacked */
+    padding: 40px;
+    text-align: left;
+}
+
+.event-image-box {
+    width: 100%; /* Image box takes full width when stacked */
+    margin-bottom: 0; /* Remove specific margin here, use gap for spacing */
+}
+
+.event-image-box img {
+    width: 100%;
+    height: auto;
+    border-radius: var(--border-radius-small);
+}
+
+.event-info-box {
+    width: 100%; /* Info box takes full width when stacked */
+    display: flex;
+    flex-direction: column;
+}
+
+.event-info-box h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.event-meta {
+    margin-bottom: 20px;
+}
+
+.event-meta p {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1rem;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.event-description {
+    margin-bottom: 20px;
+    font-weight: 400;
+}
+
+.ticket-purchase-area {
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.ticket-options-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 15px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.ticket-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    background: var(--glass-bg-dark);
+    padding: 20px;
+    border-radius: var(--border-radius-small);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.ticket-info h4 {
+    margin: 0 0 5px 0;
+    font-weight: 700;
+}
+
+.ticket-price {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.ticket-includes {
+    font-size: 0.85rem;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    line-height: 1.4;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.ticket-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-top: auto;
+    width: 100%;
+}
+
+.quantity-selector {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.quantity-btn {
+    background-color: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.quantity-btn:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+.quantity-display {
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+
+/* New Responsive adjustment for LARGER screens (Desktop-first approach) */
+@media (min-width: 992px) { /* On screens wider than 992px */
+    .event-details-container {
+        flex-direction: row; /* Layout items side-by-side */
+        gap: 40px; /* Restore larger gap */
+    }
+
+    .event-image-box {
+        flex: 1 1 40%; /* Image box takes 40% of space */
+        margin-bottom: 0; /* No bottom margin when side-by-side */
+    }
+
+    .event-info-box {
+        flex: 1 1 60%; /* Info box takes 60% of space */
+    }
+}
+
+
+/* SECTION 10: Checkout Page */
+.checkout-layout {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+    text-align: left;
+}
+
+.checkout-form-container {
+    flex: 2;
+    padding: 40px;
+}
+
+.order-summary-container {
+    flex: 1;
+    padding: 30px;
+}
+
+.checkout-form-container h3 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+}
+
+.payment-header {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+.email-match-message {
+    display: block;
+    margin-top: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.email-match-message.match {
+    color: #00e5ff;
+}
+
+.email-match-message.no-match {
+    color: #ff4d4d;
+}
+
+.order-summary-container h3 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+}
+
+.summary-calculations {
+    padding: 15px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    margin-top: 15px;
+}
+
+.summary-line {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+}
+
+.summary-total {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+
+
+/* SECTION 11: User Account Pages */
+
+.form-switch-link {
+    text-align: center;
+    margin-top: 20px;
+    font-weight: 600;
+}
+
+.form-switch-link a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.password-match-message {
+    display: block;
+    margin-top: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.password-match-message.match {
+    color: #00e5ff; /* Success color */
+}
+
+.password-match-message.no-match {
+    color: #ff4d4d; /* Error color */
+}
+
+.tabs-nav {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 40px; /* Increased */
+    margin-top: 20px;    /* Added */
+}
+
+.tab-btn {
+    background: none;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    color: #fff;
+    padding: 10px 25px;
+    border-radius: 50px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.tab-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.tab-btn.active {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: #000;
+}
+
+.tickets-list {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    max-width: 900px; /* Increased from 800px */
+    margin: 0 auto;
+    text-align: left;
+}
+
+.ticket-item {
+    display: flex;
+    padding: 30px; /* Increased from 25px */
+    gap: 25px;
+    align-items: center;
+}
+
+.ticket-details {
+    flex-grow: 1;
+}
+
+.ticket-details h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.ticket-details p {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.ticket-type-info {
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-top: 15px;
+}
+
+.ticket-qr-code img {
+    border-radius: var(--border-radius-small);
+}
+
+.show-qr-btn {
+    font-size: 0.9rem;
+    padding: 8px 20px;
+    margin-top: 15px;
+    display: inline-block;
+    width: auto;
+}
+
+.hidden {
+    display: none;
+}
+
+.profile-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+
+/* SECTION 12: Profile Page Accordion */
+
+.profile-accordion {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.accordion-item {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+.accordion-item:last-child {
+    border-bottom: none;
+}
+
+.accordion-trigger {
+    background: none;
+    border: none;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 10px;
+    color: #fff;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+.accordion-trigger .trigger-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+.accordion-trigger i.fa-key,
+.accordion-trigger i.fa-ticket-alt,
+.accordion-trigger i.fa-credit-card {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    width: 30px;
+    text-align: center;
+}
+.accordion-trigger .fa-chevron-down {
+    transition: transform 0.3s ease;
+}
+.accordion-trigger.active .fa-chevron-down {
+    transform: rotate(180deg);
+}
+
+.accordion-content {
+    padding: 0 15px 25px 15px;
+}
+
+.accordion-form {
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.view-all-btn, .add-payment-btn {
+    display: inline-block;
+    width: auto;
+    font-size: 0.9rem;
+    padding: 8px 20px;
+    margin-top: 15px;
+}
+
+.payment-method {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background-color: var(--glass-bg-dark);
+    border-radius: var(--border-radius-small);
+}
+
+.remove-payment-btn {
+    background: none;
+    border: 1px solid #ff4d4d;
+    color: #ff4d4d;
+    border-radius: 50px;
+    padding: 5px 15px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+
+/* ====================================================================== */
+/* SECTION 13: Admin Dashboard Styles                                     */
+/* ====================================================================== */
+
+.admin-section {
+    padding: 30px;
+    margin-bottom: 30px;
+    text-align: left; /* Align text within admin sections to the left */
+}
+
+.admin-section h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.admin-section .empty-msg {
+    text-align: center;
+    padding: 30px;
+    color: rgba(255, 255, 255, 0.7);
+    font-style: italic;
+}
+
+.admin-card {
+    background: var(--glass-bg-dark); /* Slightly darker glass for cards within admin section */
+    border-radius: var(--border-radius-small);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.admin-card h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: var(--primary-color);
+}
+
+/* Admin Forms - Reusing .form-group from SECTION 7 */
+.admin-form .form-group {
+    margin-bottom: 20px; /* Slightly less margin than main forms if preferred */
+}
+
+.admin-form .cta-button.form-submit-btn {
+    width: auto; /* Allow buttons to size to content */
+    padding: 10px 25px; /* Slightly smaller padding */
+    font-size: 1rem;
+}
+
+/* Styles for Existing Events List (example layout for dynamic content) */
+#existing-events-list,
+#registered-users-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Space between items */
+}
+
+.event-admin-item {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 15px;
+    background: var(--glass-bg-light);
+    border-radius: var(--border-radius-small);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.2s ease;
+}
+
+.event-admin-item:hover {
+    box-shadow: 0 0 15px rgba(0, 229, 255, 0.2); /* Subtle glow on hover */
+}
+
+.event-admin-item img {
+    width: 70px; /* Smaller thumbnail size */
+    height: 70px;
+    object-fit: cover;
+    border-radius: var(--border-radius-small);
+}
+
+.event-admin-details {
+    flex-grow: 1; /* Allows details to take up available space */
+}
+
+.event-admin-details h4 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.event-admin-details p {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 3px;
+    text-shadow: none; /* No text shadow for smaller text */
+}
+
+.event-admin-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.event-admin-actions .edit-event-btn,
+.event-admin-actions .remove-event-btn {
+    padding: 8px 15px;
+    font-size: 0.85rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.event-admin-actions .edit-event-btn {
+    background: rgba(0, 179, 255, 0.5); /* Blueish tint for edit */
+    border: 1px solid rgba(0, 179, 255, 0.7);
+    color: #fff;
+}
+.event-admin-actions .edit-event-btn:hover {
+    background: rgba(0, 179, 255, 0.7);
+}
+
+.event-admin-actions .remove-event-btn {
+    background: rgba(255, 0, 0, 0.5); /* Red for delete */
+    border: 1px solid rgba(255, 0, 0, 0.7);
+    color: #fff;
+}
+.event-admin-actions .remove-event-btn:hover {
+    background: rgba(255, 0, 0, 0.7);
+}
+
+/* Responsive adjustments for admin dashboard */
+@media (max-width: 768px) {
+    .admin-section {
+        padding: 20px;
+    }
+    .admin-card {
+        padding: 20px;
+    }
+    .event-admin-item {
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: center;
+    }
+    .event-admin-actions {
+        width: 100%;
+        justify-content: center;
+        margin-top: 15px;
+    }
+}
