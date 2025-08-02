@@ -21,9 +21,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
-});
+
+
 
 // Create 'uploads' directory if it doesn't exist
 const uploadsDir = 'uploads';
