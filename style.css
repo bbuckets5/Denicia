@@ -1,19 +1,20 @@
+/* --- OPTION 2: BRIGHT THEME --- */
 /*
 ================================================================================
  File: style.css
  Project: Click eTickets
- Description: Master stylesheet for the Click eTickets website. (FINAL VERSION)
+ Description: Master stylesheet for the Click eTickets website.
 ================================================================================
 */
 
-/* SECTION 1: CSS Variables (Root) - Dark Blue Theme */
+/* SECTION 1: CSS Variables (Root) */
 :root {
-    --primary-color: #007bff; /* A clean, modern blue */
-    --primary-shadow: rgba(0, 123, 255, 0.4);
+    --primary-color: #0056b3; /* A darker blue for contrast */
+    --primary-shadow: rgba(0, 86, 179, 0.4);
     --border-radius-main: 15px;
     --border-radius-small: 10px;
-    --glass-bg-light: rgba(255, 255, 255, 0.1);
-    --glass-bg-dark: rgba(0, 0, 0, 0.1);
+    --glass-bg-light: rgba(255, 255, 255, 0.4); /* More opaque for light background */
+    --glass-bg-dark: rgba(0, 0, 0, 0.05);
 }
 
 /* SECTION 2: Global and Base Styles */
@@ -26,14 +27,14 @@
 body {
     font-family: 'Poppins', sans-serif;
     font-weight: 400;
-    /* Dark blue/grey professional gradient */
-    background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+    /* Light grey-to-blue clean gradient */
+    background: linear-gradient(135deg, #eef2f3 0%, #8e9eab 100%);
     background-size: cover;
     background-attachment: fixed;
-    color: #ffffff;
+    color: #333; /* Dark text for readability on light background */
     min-height: 100vh;
     line-height: 1.6;
-    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
+    text-shadow: none; /* Remove dark text shadow */
 }
 
 .container {
@@ -48,8 +49,8 @@ body {
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border-radius: var(--border-radius-main);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
 }
 
 .hidden {
@@ -77,7 +78,7 @@ body {
 }
 
 .logo-img {
-    width: 200px; /* Adjust this value to your desired width */
+    width: 180px; /* Adjust this value to your desired width */
     height: auto;   /* This keeps the logo's proportions correct */
 }
 
@@ -93,7 +94,7 @@ body {
 }
 
 .nav-icon-link {
-    color: #ffffff;
+    color: #333;
     font-size: 1.8rem;
     text-decoration: none;
     position: relative;
@@ -144,7 +145,7 @@ body {
 }
 
 .user-dropdown-menu a {
-    color: #ffffff;
+    color: #333;
     padding: 10px 20px;
     text-decoration: none;
     display: block;
@@ -215,7 +216,7 @@ body {
 
 .cart-item-info p {
     font-size: 0.85rem;
-    color: rgba(255, 255, 255, 0.8);
+    color: #333;
     text-shadow: none;
     margin: 0;
     line-height: 1.4;
@@ -262,7 +263,7 @@ body {
 
 .footer-column a, .footer-column p {
     display: block;
-    color: #ffffff;
+    color: #333;
     text-decoration: none;
     margin-bottom: 10px;
     font-weight: 400;
@@ -284,7 +285,7 @@ body {
     margin-bottom: 10px;
     font-size: 0.9rem;
     text-decoration: none;
-    color: #ffffff;
+    color: #333;
     font-weight: 700;
     transition: color 0.3s;
 }
@@ -2053,7 +2054,7 @@ input[type="time"]::-webkit-calendar-picker-indicator { /* Added time input type
 }
 
 .policy-container h1 {
-    color: var(--cta-color-primary, #9b59b6);
+    color: var(--cta-color-primary, #333);
     text-align: center;
     margin-bottom: 20px;
     font-size: 2.5em;
@@ -2061,7 +2062,7 @@ input[type="time"]::-webkit-calendar-picker-indicator { /* Added time input type
 }
 
 .policy-container h2 {
-    color: #fff;
+    color: #333;
     font-weight: 600;
     margin-top: 35px; /* Adds space above each new section */
     margin-bottom: 15px;
@@ -2071,7 +2072,7 @@ input[type="time"]::-webkit-calendar-picker-indicator { /* Added time input type
 
 .policy-container p {
     line-height: 1.8; /* Improves readability of text blocks */
-    color: #ddd;
+    color: #333;
     margin-bottom: 15px;
 }
 
