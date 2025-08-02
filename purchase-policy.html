@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase Policy - Click eTickets</title>
+    
+    <link rel="stylesheet" href="style.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+</head>
+<body>
+
+    <div class="container">
+
+        <header class="main-header">
+            <a href="index.html" class="logo-link">
+                <div class="logo-area">
+                    <img class="logo-img" src="images/Clicketicketslogo.png" alt="Click eTickets Logo">
+                    <p class="tagline">Click eTickets: "Click It For Ticket!"</p>
+                </div>
+            </a>
+            
+            <nav class="main-nav">
+                <div class="user-dropdown-wrapper">
+                    <a href="#" class="nav-icon-link" aria-label="User Account" id="user-icon-toggle">
+                        <i class="fas fa-user-circle"></i>
+                    </a>
+                    <div class="user-dropdown-menu glass">
+                        <a href="login.html" id="loginLink">Log In</a>
+                        <a href="signup.html" id="signupLink">Sign Up</a>
+                        <a href="mytickets.html" id="myTicketsLink" style="display: none;">My Tickets</a>
+                        <a href="myprofile.html" id="profileLink" style="display: none;">Profile</a>
+                        <a href="#" id="logoutLink" style="display: none;">Log Out</a>
+                    </div>
+                </div>
+
+                <div class="cart-dropdown-wrapper">
+                    <a href="#" class="nav-icon-link" aria-label="Shopping Cart" id="cart-icon-toggle">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count">0</span>
+                    </a>
+                    <div class="cart-dropdown-menu glass">
+                        <div id="cart-items-list">
+                            <p class="cart-empty-msg">Your cart is empty.</p>
+                        </div>
+                        <div class="cart-footer">
+                            <a href="checkout.html" class="cta-button checkout-btn">Continue to Checkout</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <main class="main-content">
+            <div class="policy-container glass">
+                <h1>Purchase Policy</h1>
+                <p>The purpose of the following policy is to guarantee your satisfaction and comprehension of the online purchasing process.</p>
+                
+                <hr>
+
+                <h2>1. Currency</h2>
+                <p>The cost of all tickets for events held in The Bahamas is stated in BSD/USD.</p>
+
+                <h2>2. Payment Methods</h2>
+                <p>To meet your needs, we take a number of payment methods, such as Visa, and MasterCard.</p>
+                
+                <h2>3. Who Are You Buying From</h2>
+                <p>We serve as an agent for companies that provide events, including leagues, promoters, teams, venues, and performers. Typically, we sell tickets for the event organizer. ClickeTickets will handle the transaction and collect payment for the event organizer when you buy a ticket to an event in The Bahamas.</p>
+
+                <h2>4. Order Confirmation and Processing</h2>
+                <p>When we send you a confirmation, either by text or email, your order is officially confirmed. It is your duty to verify via your account whether or not your order has been placed if you do not receive an Order Confirmation after providing payment information, or if you encounter an error message or service interruption after submitting payment information. Any issues that can arise throughout the purchasing procedure might only be known to you. If you believe that an order was not placed because you did not receive confirmation, we will not be held liable for any losses, whether monetary or otherwise.</p>
+                
+                <h2>5. Service Fees</h2>
+                <p>Generally, there is a 5% service fee per ticket for tickets bought on our website. Events that fall within the subscription-based business model are not included in this.</p>
+                
+                <h2>6. Canceled, Postponed, Rescheduled</h2>
+                <p>No action is necessary to receive a refund in the case that an event is canceled; as soon as the money is received from the event organizer, we will refund the funds to the original payment method used at the time of purchase.</p>
+                <p>Your ticket(s) and any extra add-ons or upgrades, including parking, remain valid in the case of a postponement, rescheduling, or relocation. No more action is necessary.</p>
+                <p>We will make an effort to get in touch with you in the instance that your event is canceled, postponed, rescheduled, or moved. We will also let you be aware of any procedures for refunds. Travel or other costs incurred by you or anyone else as a result of an event being canceled, postponed, rescheduled, or moved are not our responsibility.</p>
+            </div>
+        </main>
+
+        <footer class="main-footer glass">
+            <div class="footer-column">
+                <h4>Resources</h4>
+                <a href="index.html">Home</a>
+                <a href="#about">About</a>
+                <a href="#terms">Terms and Conditions</a>
+                <a href="privacy-policy.html">Privacy Policy</a>
+                <a href="purchase-policy.html">Purchase Policy</a>
+            </div>
+            <div class="footer-column">
+                <h4>Let's Connect</h4>
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i> Facebook</a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i> Instagram</a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i> Twitter</a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h4>Contact Us</h4>
+                <p>contact@clicketickets.com</p>
+                <p>(242) 555-0123</p>
+            </div>
+        </footer>
+
+    </div>
+
+    <div id="custom-alert-modal" class="custom-modal-overlay hidden">
+        <div class="custom-modal-content glass">
+            <h3 id="custom-modal-title"></h3>
+            <p id="custom-modal-message"></p>
+            <div class="custom-modal-actions">
+                <button id="custom-modal-ok-btn" class="cta-button">OK</button>
+            </div>
+        </div>
+    </div>
+    <script src="js/common.js" defer></script>
+</body>
+</html>

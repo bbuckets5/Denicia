@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Event Name - Click eTickets</title>
+    <title>Event Details - Click eTickets</title>
     
     <link rel="stylesheet" href="style.css">
     
@@ -20,7 +20,7 @@
         <header class="main-header">
             <a href="index.html" class="logo-link">
                 <div class="logo-area">
-                    <img class="logo-img" src="https://placehold.co/180x50/ffffff/4a00e0?text=Logo" alt="logo">
+                    <img class="logo-img" src="images/Clicketicketslogo.png" alt="Click eTickets Logo">
                     <p class="tagline">Click eTickets: "Click It For Ticket!"</p>
                 </div>
             </a>
@@ -54,93 +54,30 @@
                     </div>
                 </div>
             </nav>
-            </header>
+        </header>
 
         <main class="main-content">
             <div class="event-details-container glass">
                 
                 <div class="event-image-box">
-                    <img src="https://images.unsplash.com/photo-1519750157634-b6d4e74a1f7b?q=80&w=1974" alt="Event Banner">
+                    <img src="" alt="Event Banner" id="event-image">
                 </div>
 
-                <div class="event-info-box">
-                    <h1>Summer Music Fest</h1>
+                <div class="event-info-box" id="event-info-box"> 
+                    <h1 id="event-name">Loading Event...</h1>
                     
                     <div class="event-meta">
-                        <p><i class="fas fa-calendar-alt"></i> Date: August 5, 2025</p>
-                        <p><i class="fas fa-map-marker-alt"></i> Location: Grand Park, USA</p>
+                        <p id="event-date-time"></p>
+                        <p id="event-location"></p>
                     </div>
 
-                    <div class="event-description">
-                        <p>Join us for the biggest music festival of the summer! Featuring a lineup of world-renowned artists, food trucks, and unforgettable experiences. Get ready to dance under the sun and stars. This is an all-ages event. Doors open at 2:00 PM.</p>
-                    </div>
+                    <div id="event-description-text" class="event-description">
+                        </div>
 
                     <div class="ticket-purchase-area">
+                        <h3>Ticket Options</h3>
                         <ul class="ticket-options-list">
-                            <li class="ticket-option" data-ticket-id="GA01" data-ticket-name="General Admission" data-ticket-price="75.00">
-                                <div class="ticket-info">
-                                    <h4>General Admission</h4>
-                                    <p class="ticket-price">$75.00</p>
-                                    <p class="ticket-includes">Includes entry to the main festival grounds.</p>
-                                </div>
-                                <div class="ticket-controls">
-                                    <div class="quantity-selector">
-                                        <button class="quantity-btn minus-btn">-</button>
-                                        <span class="quantity-display">1</span>
-                                        <button class="quantity-btn plus-btn">+</button>
-                                    </div>
-                                    <button class="cta-button add-to-cart-btn">Add to Cart</button>
-                                </div>
-                            </li>
-        
-                            <li class="ticket-option" data-ticket-id="VIP01" data-ticket-name="VIP" data-ticket-price="150.00">
-                                <div class="ticket-info">
-                                    <h4>VIP</h4>
-                                    <p class="ticket-price">$150.00</p>
-                                    <p class="ticket-includes">Includes priority entry, access to VIP lounge, and private bars.</p>
-                                </div>
-                                <div class="ticket-controls">
-                                    <div class="quantity-selector">
-                                        <button class="quantity-btn minus-btn">-</button>
-                                        <span class="quantity-display">1</span>
-                                        <button class="quantity-btn plus-btn">+</button>
-                                    </div>
-                                    <button class="cta-button add-to-cart-btn">Add to Cart</button>
-                                </div>
-                            </li>
-
-                            <li class="ticket-option" data-ticket-id="ALLACC01" data-ticket-name="All Access" data-ticket-price="200.00">
-                                <div class="ticket-info">
-                                    <h4>All Access</h4>
-                                    <p class="ticket-price">$200.00</p>
-                                    <p class="ticket-includes">Includes General Admission, VIP access, and exclusive backstage tours.</p>
-                                </div>
-                                <div class="ticket-controls">
-                                    <div class="quantity-selector">
-                                        <button class="quantity-btn minus-btn">-</button>
-                                        <span class="quantity-display">1</span>
-                                        <button class="quantity-btn plus-btn">+</button>
-                                    </div>
-                                    <button class="cta-button add-to-cart-btn">Add to Cart</button>
-                                </div>
-                            </li>
-        
-                            <li class="ticket-option" data-ticket-id="PLAT01" data-ticket-name="Platinum" data-ticket-price="225.00">
-                                <div class="ticket-info">
-                                    <h4>Platinum</h4>
-                                    <p class="ticket-price">$225.00</p>
-                                    <p class="ticket-includes">Includes VIP access plus backstage tour and artist meet & greet opportunity.</p>
-                                </div>
-                                <div class="ticket-controls">
-                                    <div class="quantity-selector">
-                                        <button class="quantity-btn minus-btn">-</button>
-                                        <span class="quantity-display">1</span>
-                                        <button class="quantity-btn plus-btn">+</button>
-                                    </div>
-                                    <button class="cta-button add-to-cart-btn">Add to Cart</button>
-                                </div>
-                            </li>
-                        </ul>
+                            </ul>
                     </div>
                 </div>
 
@@ -153,8 +90,8 @@
                 <a href="index.html">Home</a>
                 <a href="#about">About</a>
                 <a href="#terms">Terms and Conditions</a>
-                <a href="#privacy">Privacy Policy</a>
-                <a href="#purchase">Purchase Policy</a>
+                <a href="privacy-policy.html">Privacy Policy</a>
+                <a href="purchase-policy.html">Purchase Policy</a>
             </div>
             <div class="footer-column">
                 <h4>Let's Connect</h4>
@@ -173,7 +110,17 @@
 
     </div>
     
-    <script src="script.js" defer></script>
+    <div id="custom-alert-modal" class="custom-modal-overlay hidden">
+        <div class="custom-modal-content glass">
+            <h3 id="custom-modal-title"></h3>
+            <p id="custom-modal-message"></p>
+            <div class="custom-modal-actions">
+                <button id="custom-modal-ok-btn" class="cta-button">OK</button>
+            </div>
+        </div>
+    </div>
+    <script src="js/common.js" defer></script>
+    <script src="js/event-details.js" defer></script>
 
 </body>
 </html>

@@ -1,21 +1,20 @@
 /*
 ================================================================================
-  File: style.css
-  Project: Click eTickets
-  Description: Master stylesheet for the Click eTickets website. (FINAL VERSION)
+ File: style.css
+ Project: Click eTickets
+ Description: Master stylesheet for the Click eTickets website. (FINAL VERSION)
 ================================================================================
 */
 
-/* SECTION 1: CSS Variables (Root) */
+/* SECTION 1: CSS Variables (Root) - Dark Blue Theme */
 :root {
-    --primary-color: #00e5ff;
-    --primary-shadow: rgba(0, 229, 255, 0.4);
+    --primary-color: #007bff; /* A clean, modern blue */
+    --primary-shadow: rgba(0, 123, 255, 0.4);
     --border-radius-main: 15px;
     --border-radius-small: 10px;
     --glass-bg-light: rgba(255, 255, 255, 0.1);
     --glass-bg-dark: rgba(0, 0, 0, 0.1);
 }
-
 
 /* SECTION 2: Global and Base Styles */
 * {
@@ -27,7 +26,8 @@
 body {
     font-family: 'Poppins', sans-serif;
     font-weight: 400;
-    background: linear-gradient(135deg, #4a00e0, #8e2de2);
+    /* Dark blue/grey professional gradient */
+    background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
     background-size: cover;
     background-attachment: fixed;
     color: #ffffff;
@@ -42,7 +42,6 @@ body {
     margin: 0 auto;
 }
 
-
 /* SECTION 3: Reusable Styles */
 .glass {
     background: var(--glass-bg-light);
@@ -53,6 +52,9 @@ body {
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
 }
 
+.hidden {
+    display: none !important;
+}
 
 /* SECTION 4: Header and Footer */
 .logo-link, .event-link {
@@ -72,6 +74,11 @@ body {
     display: flex;
     align-items: center;
     gap: 20px;
+}
+
+.logo-img {
+    width: 200px; /* Adjust this value to your desired width */
+    height: auto;   /* This keeps the logo's proportions correct */
 }
 
 .tagline {
@@ -225,7 +232,7 @@ body {
 
 .cart-item .remove-from-cart-btn:hover {
     color: #ff0000;
-} /* Added hover for remove button */
+}
 
 
 .cart-footer {
@@ -290,7 +297,6 @@ body {
     font-size: 1.2rem;
 }
 
-
 /* SECTION 5: Main Content */
 .main-content {
     text-align: center;
@@ -344,23 +350,41 @@ body {
     font-size: 1.1rem;
 }
 
-
 /* SECTION 6: Buttons */
+/* General button reset - Relaxed for easier overrides by specific classes */
+button {
+    background: none; /* Transparent by default, can be overridden */
+    border: none; /* No border by default, can be overridden */
+    padding: 0; /* No padding by default, can be overridden */
+    font: inherit; 
+    color: inherit; 
+    cursor: pointer;
+    outline: none; 
+    appearance: none; 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    box-shadow: none;
+    border-radius: 0; 
+    margin: 0; 
+    box-sizing: border-box; 
+}
+
 .cta-section {
     padding: 50px 0;
 }
 
 .cta-button {
     display: inline-block;
-    background: var(--primary-color);
-    color: #000000;
-    padding: 15px 40px;
-    border-radius: 50px;
+    background: var(--primary-color) !important; /* Strong primary color background */
+    color: #000000 !important; /* Black text */
+    padding: 15px 40px !important; /* Generous padding */
+    border-radius: 50px !important; /* Full rounded corners */
     text-decoration: none;
     font-size: 1.2rem;
     font-weight: 700;
     box-shadow: 0 8px 20px var(--primary-shadow);
     transition: all 0.3s ease;
+    /* Other properties are handled by the general button reset above */
 }
 
 .cta-button:hover {
@@ -371,14 +395,13 @@ body {
 .cta-button.checkout-btn {
     width: auto;
     font-size: 0.9rem;
-    padding: 10px 25px;
+    padding: 10px 25px !important;
 }
 
 .cta-button.form-submit-btn {
     font-size: 1.1rem;
-    padding: 12px 30px;
+    padding: 12px 30px !important;
 }
-
 
 /* SECTION 7: Forms */
 .search-container {
@@ -434,6 +457,7 @@ body {
 .form-group input[type="password"],
 .form-group input[type="number"],
 .form-group input[type="date"],
+.form-group input[type="time"], /* Added time input type */
 .form-group textarea {
     width: 100%;
     padding: 12px;
@@ -446,7 +470,8 @@ body {
     font-family: 'Poppins', sans-serif;
 }
 
-input[type="date"]::-webkit-calendar-picker-indicator {
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator { /* Added time input type */
     filter: invert(1);
     cursor: pointer;
 }
@@ -490,9 +515,16 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .form-submit-btn {
     width: 100%;
     margin-top: 15px;
-    border: none;
-    cursor: pointer;
+    /* Already has cta-button styles, no need for redundant border/cursor */
     font-weight: 700;
+}
+
+/* Specific styling for "Add Another Ticket Type" button on admin dashboard */
+#add-new-ticket-type-btn {
+    padding: 8px 18px; /* Adjust size */
+    font-size: 0.9rem; /* Adjust font size */
+    border-radius: 20px; /* Keep consistent rounding */
+    font-weight: 700; /* Ensure it's bold */
 }
 
 .ticket-type-entry {
@@ -531,13 +563,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     color: #fff;
     font-weight: 700;
     cursor: pointer;
-    border: none;
+    border: none; /* Ensure consistency with other buttons */
 }
 
 .remove-ticket-btn:hover {
     background: rgba(255, 0, 0, 0.7);
 }
-
 
 /* SECTION 8: Responsive Design */
 @media (max-width: 992px) {
@@ -607,7 +638,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         font-size: 1rem;
     }
 }
-
 
 /* SECTION 9: Event Details Page */
 /* Default for mobile-first: Stacked layout */
@@ -742,6 +772,14 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     font-size: 1.2rem;
 }
 
+/* Specific styling for "Add to Cart" button */
+.add-to-cart-btn {
+    padding: 10px 20px; /* Make smaller */
+    font-size: 0.95rem; /* Make font smaller */
+    border-radius: 50px; /* Keep it fully rounded */
+    font-weight: 700; /* Ensuring it's bold */
+}
+
 /* New Responsive adjustment for LARGER screens (Desktop-first approach) */
 @media (min-width: 992px) { /* On screens wider than 992px */
     .event-details-container {
@@ -759,6 +797,34 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     }
 }
 
+
+/* CSS for the loading overlay on event details page */
+.loading-overlay {
+    position: absolute; /* To cover the content */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.85); /* Semi-transparent white background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10; /* Ensure it's above the content */
+    border-radius: var(--border-radius-main); /* Inherit/match container's border radius */
+    text-align: center;
+}
+
+.loading-overlay .loading-message {
+    color: #333; /* Dark text for readability on the white overlay */
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+/* Ensure the parent container has position:relative for the absolute overlay to work correctly */
+.event-details-container {
+    position: relative; /* CRITICAL: For loading-overlay to position correctly */
+    /* You might already have this from your existing CSS, but ensure it's there */
+}
 
 /* SECTION 10: Checkout Page */
 .checkout-layout {
@@ -850,170 +916,103 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     font-size: 1.2rem;
 }
 
+/* SECTION 11: User Account Pages (Extended for Profile) */
 
-/* SECTION 11: User Account Pages */
-
-.form-switch-link {
-    text-align: center;
-    margin-top: 20px;
-    font-weight: 600;
-}
-
-.form-switch-link a {
-    color: var(--primary-color);
-    text-decoration: none;
-}
-
-.password-match-message {
-    display: block;
-    margin-top: 8px;
-    font-size: 0.85rem;
-    font-weight: 600;
-}
-
-.password-match-message.match {
-    color: #00e5ff; /* Success color */
-}
-
-.password-match-message.no-match {
-    color: #ff4d4d; /* Error color */
-}
-
-.tabs-nav {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-bottom: 40px; /* Increased */
-    margin-top: 20px;    /* Added */
-}
-
-.tab-btn {
-    background: none;
-    border: 2px solid rgba(255, 255, 255, 0.5);
-    color: #fff;
-    padding: 10px 25px;
-    border-radius: 50px;
-    font-family: 'Poppins', sans-serif;
-    font-weight: 600;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.tab-btn:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-.tab-btn.active {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
-    color: #000;
-}
-
-.tickets-list {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-    max-width: 900px; /* Increased from 800px */
-    margin: 0 auto;
+/* General styling for profile sections */
+.profile-section {
+    padding: 30px; /* Consistent padding */
+    margin-bottom: 25px; /* Space between sections */
     text-align: left;
 }
 
-.ticket-item {
-    display: flex;
-    padding: 30px; /* Increased from 25px */
-    gap: 25px;
-    align-items: center;
-}
-
-.ticket-details {
-    flex-grow: 1;
-}
-
-.ticket-details h3 {
-    font-size: 1.5rem;
+.profile-section h2 {
+    font-size: 1.8rem;
     font-weight: 700;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--primary-color); /* Highlight section titles */
 }
 
-.ticket-details p {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+.user-info p {
+    font-size: 1rem;
     margin-bottom: 10px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.9);
 }
 
-.ticket-type-info {
+.user-info strong {
     font-weight: 600;
+    color: #ffffff;
+}
+
+/* Admin Dashboard Link Styling on Profile */
+#admin-dashboard-link {
+    /* Existing styles from .cta-button are good */
+    margin: 0 auto 30px auto; /* Center it and add more bottom margin */
+    display: flex; /* To center icon and text */
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 15px 30px; /* Slightly more prominent */
     font-size: 1.1rem;
-    margin-top: 15px;
 }
 
-.ticket-qr-code img {
-    border-radius: var(--border-radius-small);
-}
-
-.show-qr-btn {
-    font-size: 0.9rem;
-    padding: 8px 20px;
-    margin-top: 15px;
-    display: inline-block;
-    width: auto;
-}
-
-.hidden {
-    display: none;
-}
-
-.profile-layout {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 30px;
-    max-width: 1000px;
-    margin: 0 auto;
-}
-
-
-/* SECTION 12: Profile Page Accordion */
-
+/* Accordion Specific Styling */
 .profile-accordion {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
+    max-width: 950px; /* Keep max-width for content readability */
+    margin: 0 auto 40px auto; /* Center and add space below */
+    padding: 0; /* Remove padding here, add to items */
 }
 
 .accordion-item {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    background: var(--glass-bg-dark); /* Slightly darker background for items */
+    border-radius: var(--border-radius-small); /* Rounded corners for each item */
+    margin-bottom: 15px; /* Space between accordion items */
+    overflow: hidden; /* Ensures border-radius applies well to content */
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border for definition */
 }
 .accordion-item:last-child {
-    border-bottom: none;
+    border-bottom: none; /* No bottom border on the last item for a cleaner look */
+    margin-bottom: 0; /* No margin after last item */
 }
 
 .accordion-trigger {
-    background: none;
-    border: none;
+    background: none; /* Reset background */
+    border: none; /* Reset border */
     width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 10px;
+    padding: 25px 25px; /* Increased padding for a cleaner feel */
     color: #fff;
     font-family: 'Poppins', sans-serif;
-    font-size: 1.1rem;
+    font-size: 1.15rem; /* Slightly larger text */
     font-weight: 600;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
+.accordion-trigger:hover {
+    background: rgba(255, 255, 255, 0.05); /* Subtle hover effect */
+}
+.accordion-trigger.active {
+    background: rgba(255, 255, 255, 0.1); /* Activated state */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Separator when open */
+    border-radius: var(--border-radius-small) var(--border-radius-small) 0 0; /* Keep top corners rounded */
+}
+
 .accordion-trigger .trigger-left {
-    display: flex;
+    display: flex; /* Ensure icon and text are aligned */
     align-items: center;
-    gap: 20px;
+    gap: 15px; /* Adjust gap for icon and text */
 }
+
 .accordion-trigger i.fa-key,
 .accordion-trigger i.fa-ticket-alt,
 .accordion-trigger i.fa-credit-card {
     font-size: 1.5rem;
     color: var(--primary-color);
-    width: 30px;
+    width: 30px; /* Fixed width for icon alignment */
     text-align: center;
 }
 .accordion-trigger .fa-chevron-down {
@@ -1024,39 +1023,399 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .accordion-content {
-    padding: 0 15px 25px 15px;
+    padding: 20px 25px 30px 25px; /* Adjusted padding: top, right, bottom, left */
+    background: var(--glass-bg-dark); /* Match accordion item background */
+    border-radius: 0 0 var(--border-radius-small) var(--border-radius-small); /* Rounded bottom corners */
 }
 
 .accordion-form {
-    padding-top: 20px;
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding-top: 15px; /* Adjust padding here */
+    border-top: none; /* Remove border here as it's on trigger.active */
 }
 
-.view-all-btn, .add-payment-btn {
-    display: inline-block;
+/* Existing form-group styles are good */
+.accordion-form .form-group {
+    margin-bottom: 20px;
+}
+
+.accordion-form .form-submit-btn {
     width: auto;
-    font-size: 0.9rem;
-    padding: 8px 20px;
-    margin-top: 15px;
+    font-size: 1rem;
+    padding: 10px 25px;
 }
 
+/* Payment Method List (within accordion) */
 .payment-method {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    display: flex; /* Ensure elements are laid out in a row */
+    justify-content: space-between; /* Space out items */
+    align-items: center; /* Vertically align items */
     padding: 15px;
-    background-color: var(--glass-bg-dark);
+    background-color: var(--glass-bg-dark); /* Consistent background */
+    border-radius: var(--border-radius-small);
+    margin-bottom: 15px; /* Space between payment methods */
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border */
+}
+.payment-method span {
+    font-weight: 600;
+    color: #ffffff;
+}
+
+/* Info messages (e.g., "No upcoming tickets") */
+.info-msg, .error-msg {
+    text-align: center;
+    padding: 20px;
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.7);
+    text-shadow: none;
+}
+.error-msg {
+    color: #ff4d4d;
+    font-weight: 600;
+}
+
+/* Responsive adjustments for profile */
+@media (max-width: 768px) {
+    .profile-section {
+        padding: 20px; /* Reduce padding on smaller screens */
+    }
+    .profile-section h2 {
+        font-size: 1.5rem; /* Adjust title size */
+    }
+    .profile-accordion {
+        padding: 0 10px; /* Less horizontal padding */
+    }
+    .accordion-trigger {
+        font-size: 1rem;
+        padding: 15px 15px;
+    }
+    .accordion-trigger .trigger-left {
+        gap: 10px;
+    }
+    .accordion-trigger i.fa-key,
+    .accordion-trigger i.fa-ticket-alt,
+    .accordion-trigger i.fa-credit-card {
+        font-size: 1.2rem;
+    }
+    .accordion-content {
+        padding: 10px 15px 20px 15px;
+    }
+    #admin-dashboard-link {
+        padding: 12px 25px;
+        font-size: 1rem;
+    }
+}
+
+
+/* Tabs Navigation for My Tickets and Admin Dashboard */
+.tabs-nav {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 40px;
+    margin-top: 20px;
+}
+
+.tab-btn {
+    background: none; 
+    border: 2px solid rgba(255, 255, 255, 0.5); 
+    color: #fff; 
+    padding: 10px 25px; 
+    border-radius: 50px; 
+    font-family: 'Poppins', sans-serif; 
+    font-weight: 600; 
+    font-size: 1rem; 
+    cursor: pointer; 
+    transition: all 0.3s ease; 
+}
+
+.tab-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1); 
+}
+
+.tab-btn.active {
+    background-color: var(--primary-color); 
+    border-color: var(--primary-color); 
+    color: #000; 
+}
+
+/* Fix for anchor tags styled as tab buttons */
+.tabs-nav a.tab-btn {
+    text-decoration: none;
+}
+
+/* My Tickets Page - Ticket Item Layout & Styling */
+.tickets-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Slightly reduced gap between individual ticket items */
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.ticket-item {
+    display: flex;
+    flex-direction: row; /* Ensure row layout for details and actions */
+    justify-content: space-between; /* Push details left, actions right */
+    align-items: flex-start; /* Align items to the top of the container */
+    padding: 25px; /* Consistent padding */
+    gap: 30px; /* Increased gap for better separation */
+    background: var(--glass-bg-light);
+    border-radius: var(--border-radius-main); /* Slightly larger border-radius for cleaner cards */
+    border: 1px solid rgba(255, 255, 255, 0.18); /* Consistent border */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.ticket-details {
+    flex-grow: 1; /* Allows details to take up available space */
+    display: flex;
+    flex-direction: column;
+    gap: 5px; /* Tighter spacing for text lines */
+}
+
+.ticket-details h3 {
+    font-size: 1.4rem; /* Slightly larger heading for tickets */
+    font-weight: 700;
+    margin-bottom: 10px; /* Space below heading */
+}
+
+.ticket-details p {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Tighter gap for icon and text */
+    font-size: 0.95rem; /* Slightly larger text */
+    margin-bottom: 5px; /* Reduced margin below each paragraph */
+    color: rgba(255, 255, 255, 0.9);
+    text-shadow: none; /* Ensure no text shadow */
+}
+
+.ticket-details p:last-of-type {
+    margin-bottom: 0; /* No bottom margin on last paragraph */
+}
+
+.ticket-type-info {
+    font-weight: 700; /* Ensure bold */
+    font-size: 1.05rem; /* Slightly larger for emphasis */
+    margin-top: 15px; /* Space above ticket type */
+    color: var(--primary-color); /* Highlight ticket type */
+}
+
+.ticket-actions {
+    display: flex;
+    flex-direction: column; /* Stack QR code and button vertically */
+    align-items: center; /* Center content horizontally */
+    gap: 15px; /* Space between QR code and button */
+    padding-left: 20px; /* Add some padding to separate from details on larger screens */
+    border-left: 1px solid rgba(255, 255, 255, 0.1); /* Visual separator */
+}
+
+.ticket-qr-code {
+    padding: 5px; /* Padding around QR code for clear space */
+    background: rgba(255, 255, 255, 0.9); /* White background for QR code clarity */
+    border-radius: var(--border-radius-small);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    display: flex; /* To properly center QR img */
+    justify-content: center;
+    align-items: center;
+    width: 180px; /* Fixed width for QR container */
+    height: 180px; /* Fixed height for QR container */
+}
+
+.ticket-qr-code img {
+    max-width: 170px; /* Max size for QR code image */
+    height: 170px;
     border-radius: var(--border-radius-small);
 }
 
-.remove-payment-btn {
-    background: none;
-    border: 1px solid #ff4d4d;
-    color: #ff4d4d;
-    border-radius: 50px;
-    padding: 5px 15px;
-    cursor: pointer;
+.show-qr-btn {
+    font-size: 0.9rem;
+    padding: 8px 20px;
+    margin-top: 0; /* Adjusted from 15px, as gap handles spacing */
+    display: inline-block;
+    width: auto;
+    font-weight: 700; /* Ensure bold */
+}
+
+/* Responsive adjustments for My Tickets Page */
+@media (max-width: 768px) {
+    .ticket-item {
+        flex-direction: column; /* Stack details and actions vertically */
+        align-items: center; /* Center items when stacked */
+        text-align: center; /* Center text within card */
+        gap: 20px;
+    }
+    .ticket-actions {
+        border-left: none; /* Remove vertical border when stacked */
+        padding-left: 0;
+        padding-top: 20px; /* Add padding to separate from details */
+        border-top: 1px solid rgba(255, 255, 255, 0.1); /* Add horizontal separator */
+    }
+    .ticket-details {
+        align-items: center; /* Center details text when stacked */
+    }
+    .ticket-type-info {
+        margin-top: 10px; /* Adjust spacing */
+    }
+}
+
+/* SECTION 12: Profile Page Accordion */
+
+.profile-accordion {
+    max-width: 800px; /* Keep max-width for content readability */
+    margin: 0 auto 40px auto; /* Center and add space below */
+    padding: 0; /* Remove padding here, add to items */
+}
+
+.accordion-item {
+    background: var(--glass-bg-dark); /* Slightly darker background for items */
+    border-radius: var(--border-radius-small); /* Rounded corners for each item */
+    margin-bottom: 15px; /* Space between accordion items */
+    overflow: hidden; /* Ensures border-radius applies well to content */
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border for definition */
+}
+.accordion-item:last-child {
+    border-bottom: none; /* No bottom border on the last item for a cleaner look */
+    margin-bottom: 0; /* No margin after last item */
+}
+
+.accordion-trigger {
+    background: none; /* Reset background */
+    border: none; /* Reset border */
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 25px; /* Increased padding for a cleaner feel */
+    color: #fff;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.15rem; /* Slightly larger text */
     font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-bottom 0.3s ease, border-radius 0.3s ease;
+}
+.accordion-trigger:hover {
+    background: rgba(255, 255, 255, 0.05); /* Subtle hover effect */
+}
+.accordion-trigger.active {
+    background: rgba(255, 255, 255, 0.1); /* Activated state */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Separator when open */
+    border-radius: var(--border-radius-small) var(--border-radius-small) 0 0; /* Keep top corners rounded */
+}
+
+.accordion-trigger .trigger-left {
+    display: flex; /* Ensure icon and text are aligned */
+    align-items: center;
+    gap: 15px; /* Adjust gap for icon and text */
+}
+
+.accordion-trigger i.fa-key,
+.accordion-trigger i.fa-ticket-alt,
+.accordion-trigger i.fa-credit-card {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    width: 30px; /* Fixed width for icon alignment */
+    text-align: center;
+}
+.accordion-trigger .fa-chevron-down {
+    transition: transform 0.3s ease;
+}
+.accordion-trigger.active .fa-chevron-down {
+    transform: rotate(180deg);
+}
+
+.accordion-content {
+    padding: 15px 25px 25px 25px; /* Adjusted padding for content */
+    background: var(--glass-bg-dark); /* Match accordion item background */
+    border-radius: 0 0 var(--border-radius-small) var(--border-radius-small); /* Rounded bottom corners */
+}
+
+/* Make sure the 'hidden' class overrides other display properties */
+/* This rule is crucial for the accordion to start closed and toggle correctly */
+.accordion-content.hidden {
+    display: none !important; /* Forces it to be hidden */
+    opacity: 0; /* For smoother fade-in/out if combined with height transition */
+    max-height: 0; /* For smoother slide-down/up if combined with transition */
+    padding-top: 0 !important; /* Remove padding when hidden */
+    padding-bottom: 0 !important; /* Remove padding when hidden */
+}
+
+
+.accordion-form {
+    padding-top: 15px;
+    border-top: none; /* Remove border here as it's on trigger.active */
+}
+
+/* Existing form-group styles are good */
+.accordion-form .form-group {
+    margin-bottom: 20px;
+}
+
+.accordion-form .form-submit-btn {
+    width: auto;
+    font-size: 1rem;
+    padding: 10px 25px;
+}
+
+/* Payment Method List (within accordion) */
+.payment-method {
+    display: flex; /* Ensure elements are laid out in a row */
+    justify-content: space-between; /* Space out items */
+    align-items: center; /* Vertically align items */
+    padding: 15px;
+    background-color: var(--glass-bg-dark); /* Consistent background */
+    border-radius: var(--border-radius-small);
+    margin-bottom: 15px; /* Space between payment methods */
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border */
+}
+.payment-method span {
+    font-weight: 600;
+    color: #ffffff;
+}
+
+/* Info messages (e.g., "No upcoming tickets") */
+.info-msg, .error-msg {
+    text-align: center;
+    padding: 20px;
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.7);
+    text-shadow: none;
+}
+.error-msg {
+    color: #ff4d4d;
+    font-weight: 600;
+}
+
+/* Responsive adjustments for profile */
+@media (max-width: 768px) {
+    .profile-section {
+        padding: 20px; /* Reduce padding on smaller screens */
+    }
+    .profile-section h2 {
+        font-size: 1.5rem; /* Adjust title size */
+    }
+    .profile-accordion {
+        padding: 0 10px; /* Less horizontal padding */
+    }
+    .accordion-trigger {
+        font-size: 1rem;
+        padding: 15px 15px;
+    }
+    .accordion-trigger .trigger-left {
+        gap: 10px;
+    }
+    .accordion-trigger i.fa-key,
+    .accordion-trigger i.fa-ticket-alt,
+    .accordion-trigger i.fa-credit-card {
+        font-size: 1.2rem;
+    }
+    .accordion-content {
+        padding: 10px 15px 20px 15px;
+    }
+    #admin-dashboard-link {
+        padding: 12px 25px;
+        font-size: 1rem;
+    }
 }
 
 
@@ -1076,6 +1435,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     margin-bottom: 20px;
     padding-bottom: 10px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--primary-color);
 }
 
 .admin-section .empty-msg {
@@ -1120,76 +1480,107 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     gap: 15px; /* Space between items */
 }
 
-.event-admin-item {
+.submission-card, .user-card { /* Combined card styling for consistency */
     display: flex;
+    justify-content: space-between;
     align-items: center;
     gap: 20px;
-    padding: 15px;
+    padding: 15px 20px; /* Slightly adjusted padding for cards */
     background: var(--glass-bg-light);
     border-radius: var(--border-radius-small);
     border: 1px solid rgba(255, 255, 255, 0.1);
     transition: all 0.2s ease;
 }
 
-.event-admin-item:hover {
+.submission-card:hover, .user-card:hover {
     box-shadow: 0 0 15px rgba(0, 229, 255, 0.2); /* Subtle glow on hover */
 }
 
-.event-admin-item img {
-    width: 70px; /* Smaller thumbnail size */
-    height: 70px;
-    object-fit: cover;
-    border-radius: var(--border-radius-small);
-}
-
-.event-admin-details {
-    flex-grow: 1; /* Allows details to take up available space */
-}
-
-.event-admin-details h4 {
+.submission-card h4, .user-card .user-details p strong {
     font-size: 1.1rem;
     font-weight: 700;
     margin-bottom: 5px;
 }
 
-.event-admin-details p {
+.submission-card p, .user-card .user-details p {
     font-size: 0.85rem;
     color: rgba(255, 255, 255, 0.8);
     margin-bottom: 3px;
     text-shadow: none; /* No text shadow for smaller text */
 }
 
-.event-admin-actions {
+.submission-actions, .user-actions {
     display: flex;
-    gap: 10px;
+    gap: 8px; /* Reduced gap between buttons */
+    flex-wrap: wrap; /* Allow buttons to wrap if screen is too small */
+    justify-content: flex-end; /* Align buttons to the right */
 }
 
-.event-admin-actions .edit-event-btn,
-.event-admin-actions .remove-event-btn {
-    padding: 8px 15px;
-    font-size: 0.85rem;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: 600;
+/* Specific styling for the smaller admin action buttons */
+.submission-actions .cta-button, 
+.user-actions .cta-button {
+    padding: 6px 12px; /* Made smaller */
+    font-size: 0.75rem; /* Made smaller */
+    border-radius: 5px; /* Less rounded for a more 'button' look */
+    font-weight: 800;
+    width: auto; /* Override any full width from form-submit-btn */
+    display: inline-block; /* Ensure they stay inline */
 }
 
-.event-admin-actions .edit-event-btn {
+.submission-actions .approve-btn {
+    background: rgba(0, 255, 0, 0.5); /* Greenish tint for approve */
+    border: 1px solid rgba(0, 255, 0, 0.7);
+    color: #fff;
+}
+.submission-actions .approve-btn:hover {
+    background: rgba(0, 255, 0, 0.7);
+}
+
+.submission-actions .deny-btn {
+    background: rgba(255, 165, 0, 0.5); /* Orangish tint for deny */
+    border: 1px solid rgba(255, 165, 0, 0.7);
+    color: #fff;
+}
+.submission-actions .deny-btn:hover {
+    background: rgba(255, 165, 0, 0.7);
+}
+
+.submission-actions .edit-btn {
     background: rgba(0, 179, 255, 0.5); /* Blueish tint for edit */
     border: 1px solid rgba(0, 179, 255, 0.7);
     color: #fff;
 }
-.event-admin-actions .edit-event-btn:hover {
+.submission-actions .edit-btn:hover {
     background: rgba(0, 179, 255, 0.7);
 }
 
-.event-admin-actions .remove-event-btn {
+.submission-actions .delete-btn {
     background: rgba(255, 0, 0, 0.5); /* Red for delete */
     border: 1px solid rgba(255, 0, 0, 0.7);
     color: #fff;
 }
-.event-admin-actions .remove-event-btn:hover {
+.submission-actions .delete-btn:hover {
     background: rgba(255, 0, 0, 0.7);
 }
+
+.user-actions .make-admin-btn {
+    background: rgba(0, 179, 255, 0.5); /* Blueish for make admin */
+    border: 1px solid rgba(0, 179, 255, 0.7);
+    color: #fff;
+}
+.user-actions .make-admin-btn:hover {
+    background: rgba(0, 179, 255, 0.7);
+}
+
+.user-actions .remove-admin-btn {
+    background: rgba(255, 165, 0, 0.5); /* Orange for remove admin */
+    border: 1px solid rgba(255, 165, 0, 0.7);
+    color: #fff;
+}
+.user-actions .remove-admin-btn:hover {
+    background: rgba(255, 165, 0, 0.7);
+}
+
 
 /* Responsive adjustments for admin dashboard */
 @media (max-width: 768px) {
@@ -1199,14 +1590,577 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     .admin-card {
         padding: 20px;
     }
-    .event-admin-item {
+    .submission-card, .user-card {
         flex-direction: column;
         align-items: flex-start;
+        text-align: left; /* Keep text left-aligned inside card */
+    }
+    .submission-actions, .user-actions {
+        width: 100%;
+        justify-content: center; /* Center buttons when stacked */
+        margin-top: 15px;
+    }
+}
+
+/* Custom Modal Overlay */
+/* ====================================================================== */
+/* SECTION 14: Custom Alert Modal Styles                                  */
+/* ====================================================================== */
+
+.custom-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.custom-modal-overlay.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+/* Custom Modal Content */
+.custom-modal-content {
+    background-color: #fff; /* White background for the modal */
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    transform: translateY(-20px);
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    position: relative;
+    /* NEW: Set default text color for all content inside the modal */
+    color: #333; 
+}
+
+.custom-modal-overlay.hidden .custom-modal-content {
+    transform: translateY(-50px);
+    opacity: 0;
+}
+
+/* Modal Title */
+.custom-modal-title {
+    font-size: 1.5rem;
+    /* Removed individual color: #333 here, it's now set on parent .custom-modal-content */
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+/* Modal Message */
+.custom-modal-message {
+    font-size: 1rem;
+    /* Removed individual color: #333 here, it's now set on parent .custom-modal-content */
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+/* Modal Actions (buttons) */
+.custom-modal-actions {
+    margin-top: 20px;
+}
+
+.custom-modal-actions .cta-button {
+    padding: 10px 25px;
+    font-size: 1rem;
+    cursor: pointer;
+    /* Inherits cta-button styles, ensure it looks good */
+}
+
+/* Specific styling for message types (these will still apply to the title) */
+.custom-modal-content.success .custom-modal-title { color: #27ae60; } /* Green */
+.custom-modal-content.error .custom-modal-title { color: #e74c3c; }   /* Red */
+.custom-modal-content.info .custom-modal-title { color: #3498db; }    /* Blue */
+
+
+/* ====================================================================== */
+/* SECTION 15: Event Check-in Page Styles                                 */
+/* ====================================================================== */
+
+.checkin-container {
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    align-items: center;
+    text-align: center;
+}
+
+.checkin-event-info {
+    width: 100%;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.checkin-event-info h2 {
+    font-size: 1.8rem;
+    color: var(--primary-color);
+    margin-bottom: 15px;
+}
+
+.checkin-event-info p {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.checkin-event-info p span {
+    font-weight: bold;
+    color: #fff; /* Ensure numbers stand out */
+}
+
+/* Specific styling for remaining capacity states */
+.checkin-event-info p span[id="remaining-capacity"] {
+    transition: color 0.3s ease-in-out;
+}
+
+
+.checkin-scanner-area {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+#scan-result-display {
+    min-height: 80px; /* Give it space */
+    width: 100%;
+    max-width: 400px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: var(--border-radius-small);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.6rem; /* Larger font for easy reading */
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.8);
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+/* Scan Result Display - Type-specific colors */
+#scan-result-display.success {
+    background-color: #27ae60; /* Green for success */
+    color: #fff;
+}
+
+#scan-result-display.error {
+    background-color: #e74c3c; /* Red for error */
+    color: #fff;
+}
+
+#scan-result-display.info {
+    background-color: rgba(255, 255, 255, 0.1); /* Default info state */
+    color: rgba(255, 255, 255, 0.8);
+}
+
+
+#ticket-id-input {
+    width: 100%;
+    max-width: 400px;
+    padding: 15px;
+    font-size: 1.2rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: var(--border-radius-small);
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    outline: none;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+#ticket-id-input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+#ticket-id-input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px var(--primary-shadow);
+}
+
+#manual-checkin-btn {
+    padding: 12px 25px;
+    font-size: 1rem;
+}
+
+/* Prompt for selecting event */
+#select-event-prompt {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-top: 20px;
+}
+
+/* General button styles for cta-button (ensure consistency) */
+.cta-button {
+    transition: all 0.3s ease;
+}
+.cta-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+.cta-button.loading-btn {
+    opacity: 0.7;
+    cursor: not-allowed;
+    position: relative;
+}
+.cta-button.loading-btn::after {
+    content: '';
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+    -webkit-animation: spin 1s ease-in-out infinite;
+    margin-left: 10px;
+    vertical-align: middle;
+}
+@keyframes spin {
+    to { -webkit-transform: rotate(360deg); }
+}
+@-webkit-keyframes spin {
+    to { -webkit-transform: rotate(360deg); }
+}
+
+/* General message styles (for hidden/error/info) */
+.error-msg {
+    color: #e74c3c;
+    font-size: 0.9em;
+    margin-top: 10px;
+}
+
+.info-msg {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9em;
+    margin-top: 10px;
+}
+
+.loading-message {
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* =============================================== */
+/* =========== CHECK-IN PAGE STYLES ============ */
+/* =============================================== */
+
+/* --- Main Layout & Content --- */
+.main-content h1 {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.form-description {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #ccc;
+}
+
+/* --- Event Selector Dropdown --- */
+.event-selector-container {
+    padding: 20px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.event-selector-container label {
+    margin-right: 15px;
+    font-weight: 600;
+    font-size: 1.1em;
+}
+
+#event-selector {
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background-color: rgba(0, 0, 0, 0.2);
+    color: #fff;
+    font-size: 1em;
+    min-width: 300px;
+}
+
+/* --- Main Check-in Container --- */
+.checkin-container {
+    display: flex;
+    gap: 30px;
+    padding: 30px;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* --- Event Info/Stats Section --- */
+.checkin-event-info {
+    flex: 1;
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+    padding-right: 30px;
+}
+
+.checkin-event-info h2 {
+    margin-top: 0;
+    color: var(--cta-color-primary, #8e44ad);
+    font-weight: 700;
+}
+
+.checkin-event-info p {
+    font-size: 1.1em;
+    margin: 15px 0;
+    color: #eee;
+}
+
+.checkin-event-info span {
+    font-weight: 700;
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 5px 10px;
+    border-radius: 5px;
+    min-width: 40px;
+    display: inline-block;
+    text-align: center;
+}
+
+/* --- Scanner & Input Section --- */
+.checkin-scanner-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+#ticket-id-input {
+    width: 100%;
+    padding: 15px;
+    font-size: 1.2em;
+    text-align: center;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background-color: rgba(0, 0, 0, 0.3);
+    color: #fff;
+}
+
+#ticket-id-input:focus {
+    outline: none;
+    border-color: var(--cta-color-primary, #8e44ad);
+    box-shadow: 0 0 15px rgba(142, 68, 173, 0.5);
+}
+
+#ticket-id-input:disabled {
+    background-color: rgba(0, 0, 0, 0.1);
+    cursor: not-allowed;
+}
+
+
+/* --- Scan Result Display & Feedback States --- */
+#scan-result-display {
+    width: 100%;
+    padding: 30px 20px;
+    font-size: 1.5em;
+    font-weight: 600;
+    text-align: center;
+    border-radius: 12px;
+    border: 2px dashed rgba(255, 255, 255, 0.4);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+#scan-result-display .fas {
+    font-size: 2em; /* Make icon larger */
+}
+
+/* Default / Info State */
+#scan-result-display.info {
+    color: #ccc;
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Success State */
+#scan-result-display.success {
+    background-color: rgba(46, 204, 113, 0.15);
+    color: #2ecc71; /* Green */
+    border-color: #2ecc71;
+    border-style: solid;
+    animation: pulse-green 1s ease-in-out;
+}
+
+/* Error State */
+#scan-result-display.error {
+    background-color: rgba(231, 76, 60, 0.15);
+    color: #e74c3c; /* Red */
+    border-color: #e74c3c;
+    border-style: solid;
+    animation: pulse-red 1s ease-in-out;
+}
+
+/* --- Animations for Feedback --- */
+@keyframes pulse-green {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7); }
+    70% { transform: scale(1.02); box-shadow: 0 0 10px 20px rgba(46, 204, 113, 0); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); }
+}
+
+@keyframes pulse-red {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7); }
+    70% { transform: scale(1.02); box-shadow: 0 0 10px 20px rgba(231, 76, 60, 0); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
+}
+
+
+/* --- Responsive Design for Scanners --- */
+@media (max-width: 768px) {
+    .checkin-container {
+        flex-direction: column;
+        padding: 20px;
+    }
+
+    .checkin-event-info {
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        padding-right: 0;
+        padding-bottom: 20px;
         text-align: center;
     }
-    .event-admin-actions {
-        width: 100%;
-        justify-content: center;
-        margin-top: 15px;
+}
+
+/* =============================================== */
+/* ======== PURCHASE POLICY PAGE STYLES ======== */
+/* =============================================== */
+
+.policy-container {
+    padding: 30px 40px;
+    max-width: 850px; /* Limits line length for better readability */
+    margin: 20px auto; /* Centers the container on the page */
+}
+
+.policy-container h1 {
+    color: var(--cta-color-primary, #9b59b6);
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 2.5em;
+    font-weight: 700;
+}
+
+.policy-container h2 {
+    color: #fff;
+    font-weight: 600;
+    margin-top: 35px; /* Adds space above each new section */
+    margin-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Adds a subtle underline to section titles */
+    padding-bottom: 10px;
+}
+
+.policy-container p {
+    line-height: 1.8; /* Improves readability of text blocks */
+    color: #ddd;
+    margin-bottom: 15px;
+}
+
+.policy-container hr {
+    border: none;
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.2);
+    margin: 35px 0; /* Creates space around the initial separator */
+}
+
+/* =============================================== */
+/* ======== ADMIN: MANAGE SALES STYLES ========= */
+/* =============================================== */
+
+/* --- Search & Filter Controls --- */
+.sales-controls {
+    display: flex;
+    flex-wrap: wrap; /* Allows controls to stack on small screens */
+    gap: 15px;
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+}
+
+#sales-search-input {
+    flex-grow: 1; /* Makes the search bar take up available space */
+    min-width: 250px; /* Ensures it doesn't get too small */
+    padding: 10px 15px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background-color: rgba(0, 0, 0, 0.3);
+    color: #fff;
+    border-radius: 8px;
+    font-size: 1em;
+}
+
+#event-filter-select {
+    padding: 10px 15px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background-color: rgba(0, 0, 0, 0.3);
+    color: #fff;
+    border-radius: 8px;
+    font-size: 1em;
+}
+
+/* --- Sales List & Cards --- */
+#sales-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.sales-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap; /* Allows stacking on small screens */
+    padding: 20px;
+    border-left: 5px solid var(--cta-color-primary, #9b59b6);
+}
+
+.sales-details p {
+    margin: 5px 0;
+    color: #ddd;
+}
+
+.sales-details p strong {
+    color: #fff;
+    margin-right: 8px;
+}
+
+.sales-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px; /* Add margin for when it wraps */
+}
+
+/* --- Status Indicators --- */
+.status-indicator.status-refunded {
+    background-color: #7f8c8d; /* Gray color for refunded status */
+    color: #fff;
+}
+
+/* --- Responsive Adjustments --- */
+@media (min-width: 768px) {
+    .sales-card {
+        flex-wrap: nowrap; /* Prevent wrapping on larger screens */
+    }
+    .sales-actions {
+        margin-top: 0; /* No top margin needed on larger screens */
     }
 }

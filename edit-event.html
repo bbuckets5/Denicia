@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Event - Click eTickets</title>
+    
+    <link rel="stylesheet" href="style.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+</head>
+<body>
+
+    <div class="container">
+
+        <header class="main-header">
+            <a href="index.html" class="logo-link">
+                <div class="logo-area">
+                    <img class="logo-img" src="images/Clicketicketslogo.png" alt="Click eTickets Logo">
+                    <p class="tagline">Click eTickets: "Click It For Ticket!"</p>
+                </div>
+            </a>
+            <nav class="main-nav">
+                <div class="user-dropdown-wrapper">
+                    <a href="#" class="nav-icon-link" aria-label="User Account" id="user-icon-toggle">
+                        <i class="fas fa-user-circle"></i>
+                    </a>
+                    <div class="user-dropdown-menu glass">
+                        <a href="login.html" id="loginLink">Log In</a>
+                        <a href="signup.html" id="signupLink">Sign Up</a>
+                        <a href="mytickets.html" id="myTicketsLink" style="display: none;">My Tickets</a>
+                        <a href="myprofile.html" id="profileLink" style="display: none;">Profile</a>
+                        <a href="#" id="logoutLink" style="display: none;">Log Out</a>
+                    </div>
+                </div>
+
+                <div class="cart-dropdown-wrapper">
+                    <a href="#" class="nav-icon-link" aria-label="Shopping Cart" id="cart-icon-toggle">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count">0</span>
+                    </a>
+                    <div class="cart-dropdown-menu glass">
+                        <div id="cart-items-list">
+                            <p class="cart-empty-msg">Your cart is empty.</p>
+                        </div>
+                        <div class="cart-footer">
+                            <a href="checkout.html" class="cta-button checkout-btn">Continue to Checkout</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <main class="main-content">
+            <h1>Edit Event</h1>
+            <p class="form-description">Update the event details below.</p>
+
+            <div class="form-container glass">
+                <div id="form-message-container" class="hidden"></div> 
+                <form id="edit-event-form">
+                    <div class="form-group">
+                        <label for="eventName">Event Name</label>
+                        <input type="text" id="eventName" name="eventName" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="eventDate">Event Date</label>
+                        <input type="date" id="eventDate" name="eventDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventTime">Event Time</label>
+                        <input type="time" id="eventTime" name="eventTime" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventLocation">Event Location / Venue</label>
+                        <input type="text" id="eventLocation" name="eventLocation" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="ticketCount">Total Number of Tickets to Sell</label>
+                        <input type="number" id="ticketCount" name="ticketCount" min="1" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="eventDescription">Event Description</label>
+                        <textarea id="eventDescription" name="eventDescription" rows="4" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Define Ticket Types & Pricing</label>
+                        <div id="ticket-types-wrapper">
+                            </div>
+                        <button type="button" id="add-ticket-type" class="cta-button">Add Another Ticket Type</button>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="flyer">Event Flyer</label>
+                        <input type="file" id="flyer" name="flyer" accept="image/*">
+                        <small>Upload a new image to change. Accepted formats: JPG, PNG.</small>
+                        <div id="current-flyer-preview" style="margin-top: 10px;">
+                            <img id="flyer-preview-img" src="" alt="Current Event Flyer" style="max-width: 200px; display: none;">
+                            <p id="no-flyer-msg" style="display: none; color: gray;">No flyer currently uploaded.</p>
+                        </div>
+                        <div class="checkbox-group" style="margin-top: 10px;">
+                            <input type="checkbox" id="remove-flyer-checkbox">
+                            <label for="remove-flyer-checkbox">Remove Current Flyer</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" id="edit-event-submit-btn" class="cta-button form-submit-btn">Update Event</button>
+                    </div>
+                </form>
+            </div>
+        </main>
+
+        <footer class="main-footer glass">
+            <div class="footer-column">
+                <h4>Resources</h4>
+                <a href="index.html">Home</a>
+                <a href="#about">About</a>
+                <a href="#terms">Terms and Conditions</a>
+                <a href="privacy-policy.html">Privacy Policy</a>
+                <a href="purchase-policy.html">Purchase Policy</a>
+            </div>
+            <div class="footer-column">
+                <h4>Let's Connect</h4>
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i> Facebook</a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i> Instagram</a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i> Twitter</a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h4>Contact Us</h4>
+                <p>contact@clicketickets.com</p>
+                <p>(242) 555-0123</p>
+            </div>
+        </footer>
+
+    </div>
+    
+    <div id="custom-alert-modal" class="custom-modal-overlay hidden">
+        <div class="custom-modal-content glass">
+            <h3 id="custom-modal-title"></h3>
+            <p id="custom-modal-message"></p>
+            <div class="custom-modal-actions">
+                <button id="custom-modal-ok-btn" class="cta-button">OK</button>
+            </div>
+        </div>
+    </div>
+    <script src="js/common.js" defer></script>
+    <script src="js/edit-event.js" defer></script>
+</body>
+</html>

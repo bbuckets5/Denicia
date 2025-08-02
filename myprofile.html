@@ -16,7 +16,7 @@
         <header class="main-header">
             <a href="index.html" class="logo-link">
                 <div class="logo-area">
-                    <img class="logo-img" src="https://placehold.co/180x50/ffffff/4a00e0?text=Logo" alt="logo">
+                    <img class="logo-img" src="images/Clicketicketslogo.png" alt="Click eTickets Logo">
                     <p class="tagline">Click eTickets: "Click It For Ticket!"</p>
                 </div>
             </a>
@@ -53,13 +53,20 @@
         <main class="main-content">
             <h1>My Profile</h1>
 
+            <a href="admin-dashboard.html" class="cta-button" id="admin-dashboard-link" style="display: none; margin-bottom: 20px; width: fit-content;">
+                <i class="fas fa-user-shield"></i> Go to Admin Dashboard
+            </a>
+
             <div class="profile-section glass">
                 <h2>Account Details</h2>
-                <div class="user-info">
-                    <p><strong>Name:</strong> <span id="profileFirstName"></span> <span id="profileLastName"></span></p>
-                    <p><strong>Email:</strong> <span id="profileEmail"></span></p>
+                <div id="profile-info-container"> 
+                    <p id="profile-loading-message" class="loading-message">Loading profile...</p>
+                    <div class="user-info hidden"> <p><strong>Name:</strong> <span id="profileFirstName"></span> <span id="profileLastName"></span></p>
+                        <p><strong>Email:</strong> <span id="profileEmail"></span></p>
                     </div>
+                    <p id="profile-error-message" class="error-msg hidden"></p>
                 </div>
+            </div>
             <div class="profile-accordion glass">
 
                 <div class="accordion-item">
@@ -68,11 +75,20 @@
                         <i class="fas fa-chevron-down"></i>
                     </button>
                     <div class="accordion-content hidden">
+                        <div id="password-message-container" class="hidden"></div> 
                         <form id="change-password-form" class="accordion-form">
                             <div class="form-group"><label for="currentPassword">Current Password</label><input type="password" id="currentPassword" required></div>
-                            <div class="form-group"><label for="newPassword">New Password</label><input type="password" id="newPassword" required></div>
-                            <div class="form-group"><label for="confirmNewPassword">Confirm New Password</label><input type="password" id="confirmNewPassword" required></div>
-                            <button type="submit" class="cta-button form-submit-btn">Update Password</button>
+                            <div class="form-group">
+                                <label for="newPassword">New Password</label>
+                                <input type="password" id="newPassword" required>
+                                <span id="password-strength-indicator" class="password-strength-indicator"></span> 
+                            </div>
+                            <div class="form-group">
+                                <label for="confirmNewPassword">Confirm New Password</label>
+                                <input type="password" id="confirmNewPassword" required>
+                                <span id="password-match-message" class="password-match-message"></span> 
+                            </div>
+                            <button type="submit" id="change-password-submit-btn" class="cta-button form-submit-btn">Update Password</button>
                         </form>
                     </div>
                 </div>
@@ -83,16 +99,7 @@
                         <i class="fas fa-chevron-down"></i>
                     </button>
                     <div class="accordion-content hidden">
-                        <div class="ticket-item">
-                            <div class="ticket-details">
-                                <h3>Summer Music Fest</h3>
-                                <p><i class="fas fa-calendar-alt"></i> August 5, 2025</p>
-                                <p class="ticket-type-info">VIP Access (x1)</p>
-                            </div>
-                            <div class="ticket-qr-code">
-                                <img src="https://placehold.co/100x100/ffffff/4a00e0?text=QR" alt="QR Code">
-                            </div>
-                        </div>
+                        <p class="info-msg" style="text-align: center;">Click "View All Tickets" to see your purchased tickets.</p>
                         <a href="mytickets.html" class="cta-button view-all-btn">View All Tickets</a>
                     </div>
                 </div>
@@ -103,10 +110,7 @@
                         <i class="fas fa-chevron-down"></i>
                     </button>
                     <div class="accordion-content hidden">
-                        <div class="payment-method">
-                            <span>Visa ending in 1234</span>
-                            <button class="remove-payment-btn">Remove</button>
-                        </div>
+                        <p class="info-msg">No payment methods saved. You can add one during checkout.</p>
                         <button class="cta-button add-payment-btn">Add New Card</button>
                     </div>
                 </div>
@@ -118,8 +122,10 @@
             <div class="footer-column">
                 <h4>Resources</h4>
                 <a href="index.html">Home</a>
+                <a href="#about">About</a>
                 <a href="#terms">Terms and Conditions</a>
-                <a href="#privacy">Privacy Policy</a>
+                <a href="privacy-policy.html">Privacy Policy</a>
+                <a href="purchase-policy.html">Purchase Policy</a>
             </div>
             <div class="footer-column">
                 <h4>Let's Connect</h4>
@@ -137,6 +143,17 @@
         </footer>
         
     </div>
-    <script src="script.js" defer></script>
+    
+    <div id="custom-alert-modal" class="custom-modal-overlay hidden">
+        <div class="custom-modal-content glass">
+            <h3 id="custom-modal-title"></h3>
+            <p id="custom-modal-message"></p>
+            <div class="custom-modal-actions">
+                <button id="custom-modal-ok-btn" class="cta-button">OK</button>
+            </div>
+        </div>
+    </div>
+    <script src="js/common.js" defer></script>
+    <script src="js/my-profile.js" defer></script>
 </body>
 </html>

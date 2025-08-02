@@ -11,18 +11,21 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/cleave.js@1.6.0/dist/cleave.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/cleave.js@1.6.0/dist/addons/cleave-phone.us.js"></script>
 </head>
-<body>
-
+<body class="checkout-page"> 
     <div class="container">
 
         <header class="main-header">
             <a href="index.html" class="logo-link">
                 <div class="logo-area">
-                    <img class="logo-img" src="https://placehold.co/180x50/ffffff/4a00e0?text=Logo" alt="logo">
+                    <img class="logo-img" src="images/Clicketicketslogo.png" alt="Click eTickets Logo">
                     <p class="tagline">Click eTickets: "Click It For Ticket!"</p>
                 </div>
             </a>
+            
             <nav class="main-nav">
                 <div class="user-dropdown-wrapper">
                     <a href="#" class="nav-icon-link" aria-label="User Account" id="user-icon-toggle">
@@ -36,6 +39,7 @@
                         <a href="#" id="logoutLink" style="display: none;">Log Out</a>
                     </div>
                 </div>
+
                 <div class="cart-dropdown-wrapper">
                     <a href="#" class="nav-icon-link" aria-label="Shopping Cart" id="cart-icon-toggle">
                         <i class="fas fa-shopping-cart"></i>
@@ -57,7 +61,40 @@
             <h1>Checkout</h1>
             
             <div class="checkout-layout">
-                <div class="checkout-form-container glass">
+                <div id="guest-login-prompt" class="checkout-form-container glass">
+                    <h3>How would you like to proceed?</h3>
+                    <p style="text-align: center; margin-bottom: 25px; color: rgba(255,255,255,0.8);">
+                        To purchase tickets, please choose an option below:
+                    </p>
+                    <div style="display: flex; flex-direction: column; gap: 15px; max-width: 300px; margin: 0 auto;">
+                        <button type="button" id="proceed-as-guest-btn" class="cta-button form-submit-btn">Continue as Guest</button>
+                        <button type="button" id="create-profile-btn" class="cta-button form-submit-btn" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: #fff;">Create Profile</button>
+                    </div>
+                    <p style="text-align: center; margin-top: 20px; font-size: 0.9rem; color: rgba(255,255,255,0.7);">Already have an account? <a href="login.html" style="color: var(--primary-color); text-decoration: none;">Log In here.</a></p>
+                </div>
+
+                <div id="guest-email-form" class="checkout-form-container glass hidden">
+                    <div id="guest-email-message-container" class="hidden"></div> 
+                    <form id="guest-email-confirm-form">
+                        <h3>Your Email for Tickets</h3>
+                        <p style="text-align: center; margin-bottom: 25px; color: rgba(255,255,255,0.8);">
+                            Please enter your email to receive your tickets.
+                        </p>
+                        <div class="form-group">
+                            <label for="guestEmail">Email Address</label>
+                            <input type="email" id="guestEmail" name="guestEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmGuestEmail">Confirm Email Address</label>
+                            <input type="email" id="confirmGuestEmail" name="confirmGuestEmail" required>
+                            <span class="email-match-message"></span>
+                        </div>
+                        <button type="submit" id="guest-email-submit-btn" class="cta-button form-submit-btn">Proceed to Payment</button>
+                    </form>
+                </div>
+
+                <div id="main-payment-form-wrapper" class="checkout-form-container glass hidden">
+                    <div id="payment-message-container" class="hidden"></div> 
                     <form id="payment-form">
                         <h3>Billing Information</h3>
                         <div class="form-row">
@@ -81,53 +118,44 @@
                         </div>
                         <div class="form-group">
                             <label for="phone">Telephone Number</label>
-                            <input type="tel" id="phone" name="phone" required>
+                            <input type="tel" id="phone" name="phone" class="phone-format" placeholder="(123) 456-7890" required>
                         </div>
                         
                         <h3 class="payment-header">Payment Details</h3>
                         <div class="form-group">
                             <label for="cardNumber">Card Number</label>
-                            <input type="text" id="cardNumber" name="cardNumber" placeholder="0000 0000 0000 0000" required>
+                            <input type="text" id="cardNumber" name="cardNumber" class="card-number-format" placeholder="0000 0000 0000 0000" required>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="expiryDate">Expiry Date</label>
-                                <input type="text" id="expiryDate" name="expiryDate" placeholder="MM / YY" required>
+                                <input type="text" id="expiryDate" name="expiryDate" class="card-expiry-format" placeholder="MM / YY" required>
                             </div>
                             <div class="form-group">
                                 <label for="cvc">CVC</label>
-                                <input type="text" id="cvc" name="cvc" placeholder="123" required>
+                                <input type="text" id="cvc" name="cvc" class="card-cvc-format" placeholder="123" required>
                             </div>
                         </div>
-                        <button type="submit" class="cta-button form-submit-btn">Complete Purchase</button>
+                        <button type="submit" id="complete-purchase-btn" class="cta-button form-submit-btn">Complete Purchase</button>
                     </form>
                 </div>
-
                 <div class="order-summary-container glass">
                     <h3>Order Summary</h3>
                     <div class="summary-items">
-                        <div class="summary-item">
-                            <span class="summary-item-name">Summer Music Fest (VIP Access)</span>
-                            <span class="summary-item-price">$150.00</span>
                         </div>
-                        <div class="summary-item">
-                            <span class="summary-item-name">Beachside Bonfire (General) x2</span>
-                            <span class="summary-item-price">$50.00</span>
-                        </div>
-                    </div>
                     <div class="summary-calculations">
                         <div class="summary-line">
                             <span>Subtotal</span>
-                            <span>$200.00</span>
+                            <span class="cart-subtotal-price">$0.00</span>
                         </div>
                         <div class="summary-line">
                             <span>Service Fee (5%)</span>
-                            <span>$10.00</span>
+                            <span class="cart-service-fee-price">$0.00</span>
                         </div>
                     </div>
                     <div class="summary-total">
                         <span class="summary-total-label">Total</span>
-                        <span class="summary-total-price">$210.00</span>
+                        <span class="summary-total-price">$0.00</span>
                     </div>
                 </div>
             </div>
@@ -137,8 +165,10 @@
             <div class="footer-column">
                 <h4>Resources</h4>
                 <a href="index.html">Home</a>
+                <a href="#about">About</a>
                 <a href="#terms">Terms and Conditions</a>
-                <a href="#privacy">Privacy Policy</a>
+                <a href="privacy-policy.html">Privacy Policy</a>
+                <a href="purchase-policy.html">Purchase Policy</a>
             </div>
             <div class="footer-column">
                 <h4>Let's Connect</h4>
@@ -156,6 +186,17 @@
         </footer>
 
     </div>
-    <script src="script.js" defer></script>
+    
+    <div id="custom-alert-modal" class="custom-modal-overlay hidden">
+        <div class="custom-modal-content glass">
+            <h3 id="custom-modal-title"></h3>
+            <p id="custom-modal-message"></p>
+            <div class="custom-modal-actions">
+                <button id="custom-modal-ok-btn" class="cta-button">OK</button>
+            </div>
+        </div>
+    </div>
+    <script src="js/common.js" defer></script>
+    <script src="js/checkout.js" defer></script>
 </body>
 </html>

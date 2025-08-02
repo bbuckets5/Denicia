@@ -12,6 +12,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
+    <script src="https://cdn.jsdelivr.net/npm/cleave.js@1.6.0/dist/cleave.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/cleave.js@1.6.0/dist/addons/cleave-phone.us.js"></script>
 </head>
 <body>
 
@@ -20,7 +22,7 @@
         <header class="main-header">
             <a href="index.html" class="logo-link">
                 <div class="logo-area">
-                    <img class="logo-img" src="https://placehold.co/180x50/ffffff/4a00e0?text=Logo" alt="logo">
+                    <img class="logo-img" src="images/Clicketicketslogo.png" alt="Click eTickets Logo">
                     <p class="tagline">Click eTickets: "Click It For Ticket!"</p>
                 </div>
             </a>
@@ -54,13 +56,14 @@
                     </div>
                 </div>
             </nav>
-            </header>
+        </header>
 
         <main class="main-content">
             <h1>Ticket Your Event</h1>
             <p class="form-description">Fill out the form below to get your event listed.</p>
 
             <div class="form-container glass">
+                <div id="form-message-container" class="hidden"></div> 
                 <form id="event-submission-form" method="POST">
                     <div class="form-group">
                         <label for="firstName">First Name</label>
@@ -78,7 +81,6 @@
                         <label for="eventName">Event Name</label>
                         <input type="text" id="eventName" name="eventName" required>
                     </div>
-
                     <div class="form-group">
                         <label for="eventDate">Event Date</label>
                         <input type="date" id="eventDate" name="eventDate" required>
@@ -87,11 +89,13 @@
                         <label for="eventLocation">Event Location / Venue</label>
                         <input type="text" id="eventLocation" name="eventLocation" placeholder="e.g., Grand Park" required>
                     </div>
-                    
+                    <div class="form-group">
+                        <label for="eventTime">Event Time</label>
+                        <input type="time" id="eventTime" name="eventTime" required>
+                    </div>
                     <div class="form-group">
                         <label for="phone">Telephone Contact</label>
-                        <input type="tel" id="phone" name="phone" required pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" placeholder="(555) 555-1234">
-                        <small>Format: (555) 555-1234</small>
+                        <input type="tel" id="phone" name="phone" class="phone-format" placeholder="(123) 456-7890" required>
                     </div>
                     <div class="form-group">
                         <label for="ticketCount">Total Number of Tickets to Sell</label>
@@ -99,24 +103,23 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Define Ticket Types & Pricing</label>
-                        <div id="ticket-types-wrapper">
-                            <div class="ticket-type-entry">
-                                <input type="text" class="ticket-label" name="ticket_type[]" placeholder="e.g., General Admission" required>
-                                <input type="number" class="ticket-price-input" name="ticket_price[]" placeholder="40.00" min="0" step="0.01" required>
-                                <textarea class="ticket-inclusions" name="ticket_includes[]" placeholder="What's included? e.g., Entry to main event area"></textarea>
-                                <button type="button" class="remove-ticket-btn cta-button">Remove</button>
-                            </div>
-                        </div>
-                        <button type="button" id="add-ticket-type" class="cta-button">Add Another Ticket Type</button>
+                        <label for="eventDescription">Event Description</label>
+                        <textarea id="eventDescription" name="eventDescription" rows="4" placeholder="Describe your event..." required></textarea>
                     </div>
 
                     <div class="form-group">
-                        <label for="flyer">Event Flyer/Image (JPG, PNG, PDF)</label>
-                        <input type="file" id="flyer" name="flyer" accept=".pdf,.jpg,.jpeg,.png" required>
+                        <label>Define Ticket Types & Pricing</label>
+                        <div id="ticket-types-wrapper">
+                            </div>
+                        <button type="button" id="add-ticket-type" class="cta-button">Add Another Ticket Type</button>
                     </div>
                     <div class="form-group">
-                        <button type="submit" class="cta-button form-submit-btn">Submit Event</button>
+                        <label for="flyer-upload-input">Event Flyer/Image (JPG, PNG)</label> 
+                        <input type="file" id="flyer-upload-input" name="flyer" accept=".jpg,.jpeg,.png" required> 
+                        <small>Accepted formats: JPG, PNG. Max size: 6MB.</small>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" id="submit-event-btn" class="cta-button form-submit-btn">Submit Event</button> 
                     </div>
                 </form>
             </div>
@@ -126,8 +129,10 @@
             <div class="footer-column">
                 <h4>Resources</h4>
                 <a href="index.html">Home</a>
+                <a href="#about">About</a>
                 <a href="#terms">Terms and Conditions</a>
-                <a href="#privacy">Privacy Policy</a>
+                <a href="privacy-policy.html">Privacy Policy</a>
+                <a href="purchase-policy.html">Purchase Policy</a>
             </div>
             <div class="footer-column">
                 <h4>Let's Connect</h4>
@@ -146,7 +151,16 @@
 
     </div>
 
-    <script src="script.js" defer></script>
-    <script src="promoter-form.js" defer></script>
+    <div id="custom-alert-modal" class="custom-modal-overlay hidden">
+        <div class="custom-modal-content glass">
+            <h3 id="custom-modal-title"></h3>
+            <p id="custom-modal-message"></p>
+            <div class="custom-modal-actions">
+                <button id="custom-modal-ok-btn" class="cta-button">OK</button>
+            </div>
+        </div>
+    </div>
+    <script src="js/common.js" defer></script>
+    <script src="js/promoter-form.js" defer></script>
 </body>
 </html>

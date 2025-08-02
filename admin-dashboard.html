@@ -20,7 +20,7 @@
         <header class="main-header">
             <a href="index.html" class="logo-link">
                 <div class="logo-area">
-                    <img class="logo-img" src="https://placehold.co/180x50/ffffff/4a00e0?text=Logo" alt="logo">
+                    <img class="logo-img" src="images/Clicketicketslogo.png" alt="Click eTickets Logo">
                     <p class="tagline">Click eTickets: "Click It For Ticket!"</p>
                 </div>
             </a>
@@ -62,70 +62,101 @@
             <div class="tabs-nav">
                 <button class="tab-btn active" data-target="manage-events">Manage Events</button>
                 <button class="tab-btn" data-target="manage-users">Manage Users</button>
-                </div>
+                <button class="tab-btn" data-target="manage-sales"><i class="fas fa-dollar-sign"></i> Manage Sales</button>
+                <button class="tab-btn" data-target="add-new-event">Add New Event</button> 
+                <a href="checkin.html" class="tab-btn">
+                    <i class="fas fa-qrcode"></i> Event Check-in
+                </a>
+            </div>
             
             <div id="manage-events" class="admin-section glass">
-                <h2>Event Management</h2>
-                <p>Use this section to add, edit, or delete events.</p>
-
-                <div class="admin-card">
-                    <h3>Add New Event</h3>
-                    <form id="add-event-form" class="admin-form">
-                        <div class="form-group">
-                            <label for="newEventName">Event Name</label>
-                            <input type="text" id="newEventName" name="eventName" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="newEventDate">Event Date</label>
-                            <input type="date" id="newEventDate" name="eventDate" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="newEventLocation">Location</label>
-                            <input type="text" id="newEventLocation" name="eventLocation" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="newEventDescription">Description</label>
-                            <textarea id="newEventDescription" name="eventDescription" rows="4" required></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="newEventPrice">Default Ticket Price</label>
-                            <input type="number" id="newEventPrice" name="eventPrice" min="0" step="0.01" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="newEventImage">Event Image URL (for now, will use file upload later)</label>
-                            <input type="text" id="newEventImage" name="eventImage" placeholder="https://example.com/image.jpg" required>
-                        </div>
-                        <button type="submit" class="cta-button form-submit-btn">Add Event</button>
-                    </form>
-                </div>
-
-                <div class="admin-card">
-                    <h3>Existing Events</h3>
-                    <div id="existing-events-list">
-                        <p class="empty-msg">No events to display. Add some above!</p>
-                        </div>
+                <h2>Existing Event Submissions</h2>
+                <p>Approve, deny, edit, or delete event submissions from promoters.</p>
+                <div id="existing-events-list">
+                    <p class="empty-msg">Loading events...</p>
                 </div>
             </div>
 
             <div id="manage-users" class="admin-section glass hidden">
                 <h2>User Management</h2>
-                <p>View and manage user accounts.</p>
-                <div class="admin-card">
-                    <h3>Registered Users</h3>
-                    <div id="registered-users-list">
-                        <p class="empty-msg">No users to display.</p>
-                        </div>
+                <p>View and manage user accounts and roles.</p>
+                <div id="registered-users-list">
+                    <p class="empty-msg">Loading users...</p>
+                </div>
+            </div>
+            
+            <div id="manage-sales" class="admin-section glass hidden">
+                <h2>Manage Sales & Refunds</h2>
+                <p>View all ticket sales and issue refunds.</p>
+
+                <div class="sales-controls">
+                    <input type="search" id="sales-search-input" placeholder="Search by Ticket ID, Name, or Email...">
+                    <select id="event-filter-select">
+                        <option value="">Filter by Event</option>
+                        </select>
+                    <button id="clear-filters-btn" class="cta-button">Clear</button>
+                </div>
+
+                <div id="sales-list-container">
+                    <p class="empty-msg">Loading sales data...</p>
                 </div>
             </div>
 
-            </main>
+            <div id="add-new-event" class="admin-section glass hidden">
+                <h2>Add New Event Directly</h2>
+                <p>Fill out the form below to add a new event directly to the system.</p>
+                <div id="form-message-container" class="hidden"></div> 
+                <form id="add-event-form" class="admin-form">
+                    <div class="form-group">
+                        <label for="addEventName">Event Name</label>
+                        <input type="text" id="addEventName" name="eventName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="addEventDate">Event Date</label>
+                        <input type="date" id="addEventDate" name="eventDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="addEventLocation">Event Location / Venue</label>
+                        <input type="text" id="addEventLocation" name="eventLocation" placeholder="e.g., Grand Park" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="addEventTime">Event Time</label>
+                        <input type="time" id="addEventTime" name="eventTime" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="addTicketCount">Total Number of Tickets to Sell</label>
+                        <input type="number" id="addTicketCount" name="ticketCount" min="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="addEventDescription">Event Description</label>
+                        <textarea id="addEventDescription" name="eventDescription" rows="4" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Define Ticket Types & Pricing</label>
+                        <div id="add-ticket-types-wrapper"></div>
+                        <button type="button" id="add-new-ticket-type-btn" class="cta-button">Add Another Ticket Type</button>
+                    </div>
+                    <div class="form-group">
+                        <label for="addFlyer">Event Flyer/Image (JPG, PNG)</label>
+                        <input type="file" id="addFlyer" name="flyer" accept=".jpg,.jpeg,.png" required>
+                        <small>Accepted formats: JPG, PNG. Max size: 5MB.</small>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" id="add-event-submit-btn" class="cta-button form-submit-btn">Submit New Event</button>
+                    </div>
+                </form>
+            </div>
+            
+        </main>
 
         <footer class="main-footer glass">
             <div class="footer-column">
                 <h4>Resources</h4>
                 <a href="index.html">Home</a>
+                <a href="#about">About</a>
                 <a href="#terms">Terms and Conditions</a>
-                <a href="#privacy">Privacy Policy</a>
+                <a href="privacy-policy.html">Privacy Policy</a>
+                <a href="purchase-policy.html">Purchase Policy</a>
             </div>
             <div class="footer-column">
                 <h4>Let's Connect</h4>
@@ -144,8 +175,17 @@
 
     </div>
     
-    <script src="script.js" defer></script>
-    <script src="admin.js" defer></script> 
+    <div id="custom-alert-modal" class="custom-modal-overlay hidden">
+        <div class="custom-modal-content glass">
+            <h3 id="custom-modal-title"></h3>
+            <p id="custom-modal-message"></p>
+            <div class="custom-modal-actions">
+                <button id="custom-modal-ok-btn" class="cta-button">OK</button>
+            </div>
+        </div>
+    </div>
+    <script src="js/common.js" defer></script> 
+    <script src="js/admin.js" defer></script> 
 
 </body>
 </html>
