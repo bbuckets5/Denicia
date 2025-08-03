@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 scanResultDisplay.innerHTML = `<i class="fas fa-qrcode"></i> Ready to scan`;
             }
             scanResultDisplay.className = 'scan-result';
-        }, 3000);
+        }, 10000);
     }
 
     function updateCounters() {

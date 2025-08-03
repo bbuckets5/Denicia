@@ -10,11 +10,15 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { body, validationResult, check } = require('express-validator');
 const qrcode = require('qrcode');
+const sharp = require('sharp');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit')
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware Setup
+app.use(helmet()); // Security headers
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -31,11 +35,30 @@ if (!require('fs').existsSync(uploadsDir)){
     require('fs').mkdirSync(uploadsDir);
 }
 
-// Configure Multer
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => cb(null, uploadsDir),
-    filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname))
+// --- RATE LIMITING MIDDLEWARE ---
+const apiLimiter = rateLimit({
+	windowMs: 15 * 60 * 1000, // 15 minutes
+	max: 100, // Limit each IP to 100 requests per windowMs
+	standardHeaders: true,
+	legacyHeaders: false,
+    message: 'Too many requests from this IP, please try again after 15 minutes',
 });
+
+const authLimiter = rateLimit({
+	windowMs: 15 * 60 * 1000, // 15 minutes
+	max: 10, // Limit each IP to 10 authentication attempts per windowMs
+	standardHeaders: true,
+	legacyHeaders: false,
+    message: 'Too many authentication attempts from this IP, please try again after 15 minutes',
+});
+
+// Apply limiters to specific routes
+app.use('/api/users/login', authLimiter);
+app.use('/api/users/register', authLimiter);
+app.use('/api/', apiLimiter); // Apply general limiter to all other API routes
+
+// Configure Multer to store files in memory for processing
+const storage = multer.memoryStorage();
 const fileFilter = (req, file, cb) => {
     if (file.mimetype.startsWith('image/')) {
         cb(null, true);
@@ -46,7 +69,7 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({ 
     storage: storage,
     fileFilter: fileFilter,
-    limits: { fileSize: 6 * 1024 * 1024 } // 6MB file size limit
+    limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit for original files
 });
 
 // MongoDB Connection
@@ -68,6 +91,8 @@ const submissionSchema = new mongoose.Schema({
     phone: { type: String, default: '' },
     ticketCount: { type: Number, required: true, min: 0 },
     flyerImagePath: { type: String, default: null },
+    flyerImageThumbnailPath: { type: String, default: null },
+    flyerImagePlaceholderPath: { type: String, default: null },
     tickets: [{
         type: { type: String, required: true },
         price: { type: Number, required: true, min: 0 },
@@ -280,17 +305,17 @@ app.post('/api/tickets/:ticketId/resend', authenticateToken, isAdmin, async (req
         const formattedDate = new Date(ticket.eventId.eventDate).toLocaleDateString();
 
         let ticketHtml = `
-            <div style="border: 1px solid #eee; padding: 15px; margin-bottom: 20px; border-radius: 8px; font-family: sans-serif;">
-                <p><strong>Event:</strong> ${ticket.eventId.eventName}</p>
-                <p><strong>Date:</strong> ${formattedDate} at ${formattedTime}</p>
-                <p><strong>Ticket Type:</strong> ${ticket.ticketType}</p>
-                <p><strong>Ticket ID:</strong> ${ticket._id}</p>
-                <p style="text-align: center;"><strong>QR Code:</strong></p>
-                <img src="${qrCodeDataUrl}" alt="QR Code" style="display: block; margin: 0 auto; max-width: 150px;">
+            <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 20px; border-radius: 8px; background-color: #ffffff; color: #333; font-family: sans-serif; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                <p style="margin: 0 0 5px 0; font-size: 1.1em;"><strong>Event:</strong> ${ticket.eventId.eventName}</p>
+                <p style="margin: 0 0 5px 0;"><strong>Date:</strong> ${formattedDate} at ${formattedTime}</p>
+                <p style="margin: 0 0 5px 0;"><strong>Ticket Type:</strong> ${ticket.ticketType}</p>
+                <p style="margin: 0 0 10px 0;"><strong>Ticket ID:</strong> ${ticket._id}</p>
+                <p style="margin: 0 0 5px 0; text-align: center;"><strong>QR Code:</strong></p>
+                <img src="${qrCodeDataUrl}" alt="QR Code" style="display: block; margin: 0 auto; max-width: 150px; border: 1px solid #ddd; padding: 5px; background-color: #ffffff;">
             </div>`;
 
         let emailHtmlContent = `
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto;">
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; color: #333;">
                 <h2>Your Ticket from Click eTickets (Resent)</h2>
                 <p>Hello ${ticket.customerFirstName},</p>
                 <p>As requested, here is your ticket information again. Please present this at the event.</p>
@@ -412,32 +437,52 @@ app.post('/api/submit', upload.single('flyer'), [
 ], async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        if (req.file) {
-            try { await fs.unlink(req.file.path); } catch (e) { console.error("Error deleting uploaded file:", e); }
-        }
         return res.status(400).json({ errors: errors.array().map(e => e.msg).join(', ') });
     }
     if (!req.file) {
         return res.status(400).json({ error: 'Event flyer is required.' });
     }
-    const ticketData = req.body.ticket_type.map((type, index) => ({
-        type: type,
-        price: parseFloat(req.body.ticket_price[index]) || 0,
-        includes: req.body.ticket_includes[index] || ''
-    }));
-    const newSubmission = new Submission({
-        ...req.body,
-        flyerImagePath: req.file ? req.file.path : null,
-        tickets: ticketData,
-        status: 'pending'
-    });
+
+    const timestamp = Date.now();
+    const originalFilename = `${timestamp}-original.webp`;
+    const thumbnailFilename = `${timestamp}-thumbnail.webp`;
+    const placeholderFilename = `${timestamp}-placeholder.webp`;
+    
+    const originalPath = path.join('uploads', originalFilename);
+    const thumbnailPath = path.join('uploads', thumbnailFilename);
+    const placeholderPath = path.join('uploads', placeholderFilename);
+
     try {
+        await sharp(req.file.buffer).webp({ quality: 80 }).toFile(originalPath);
+        await sharp(req.file.buffer).resize({ width: 800 }).webp({ quality: 60 }).toFile(thumbnailPath);
+        await sharp(req.file.buffer).resize({ width: 20 }).blur(3).webp({ quality: 50 }).toFile(placeholderPath);
+
+        const ticketData = req.body.ticket_type.map((type, index) => ({
+            type: type,
+            price: parseFloat(req.body.ticket_price[index]) || 0,
+            includes: req.body.ticket_includes[index] || ''
+        }));
+        
+        const newSubmission = new Submission({
+            ...req.body,
+            flyerImagePath: originalPath,
+            flyerImageThumbnailPath: thumbnailPath,
+            flyerImagePlaceholderPath: placeholderPath,
+            tickets: ticketData,
+            status: 'pending'
+        });
+    
         await newSubmission.save();
         res.status(200).json({ message: 'Submission received successfully!' });
+
     } catch (err) {
         console.error("Error processing submission:", err);
-        if (req.file) {
-            try { await fs.unlink(req.file.path); } catch (e) { console.error("Error deleting file after DB save failure:", e); }
+        try {
+            await fs.unlink(originalPath);
+            await fs.unlink(thumbnailPath);
+            await fs.unlink(placeholderPath);
+        } catch (cleanupErr) {
+            console.error("Error cleaning up files after submission failure:", cleanupErr);
         }
         res.status(500).json({ error: 'Failed to process submission.' });
     }
@@ -505,26 +550,32 @@ app.put('/api/submissions/:id', authenticateToken, isAdmin, upload.single('flyer
 ], async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        if (req.file) {
-            try { await fs.unlink(req.file.path); } catch (e) { console.error("Error deleting uploaded file after validation fail:", e); }
-        }
         return res.status(400).json({ errors: errors.array().map(e => e.msg).join(', ') });
     }
     try {
         const existingEvent = await Submission.findById(req.params.id);
         if (!existingEvent) return res.status(404).json({ message: 'Event not found.' });
         let updateData = { ...req.body };
+
         if (req.file) {
-            updateData.flyerImagePath = req.file.path;
-            if (existingEvent.flyerImagePath) {
-                try { await fs.unlink(existingEvent.flyerImagePath); } catch (unlinkErr) { console.error("Error deleting old flyer:", unlinkErr); }
-            }
-        } else if (req.body.removeFlyer === 'true') {
-            if (existingEvent.flyerImagePath) {
-                try { await fs.unlink(existingEvent.flyerImagePath); } catch (unlinkErr) { console.error("Error deleting old flyer marked for removal:", unlinkErr); }
-            }
-            updateData.flyerImagePath = null;
+            const timestamp = Date.now();
+            const newOriginalPath = path.join('uploads', `${timestamp}-original.webp`);
+            const newThumbnailPath = path.join('uploads', `${timestamp}-thumbnail.webp`);
+            const newPlaceholderPath = path.join('uploads', `${timestamp}-placeholder.webp`);
+
+            await sharp(req.file.buffer).webp({ quality: 80 }).toFile(newOriginalPath);
+            await sharp(req.file.buffer).resize({ width: 800 }).webp({ quality: 60 }).toFile(newThumbnailPath);
+            await sharp(req.file.buffer).resize({ width: 20 }).blur(3).webp({ quality: 50 }).toFile(newPlaceholderPath);
+            
+            updateData.flyerImagePath = newOriginalPath;
+            updateData.flyerImageThumbnailPath = newThumbnailPath;
+            updateData.flyerImagePlaceholderPath = newPlaceholderPath;
+
+            if (existingEvent.flyerImagePath) await fs.unlink(existingEvent.flyerImagePath).catch(e => console.error("Could not delete old original image:", e.message));
+            if (existingEvent.flyerImageThumbnailPath) await fs.unlink(existingEvent.flyerImageThumbnailPath).catch(e => console.error("Could not delete old thumbnail:", e.message));
+            if (existingEvent.flyerImagePlaceholderPath) await fs.unlink(existingEvent.flyerImagePlaceholderPath).catch(e => console.error("Could not delete old placeholder:", e.message));
         }
+        
         const tickets = [];
         let i = 0;
         while (req.body[`tickets[${i}][type]`] !== undefined) {
@@ -540,9 +591,6 @@ app.put('/api/submissions/:id', authenticateToken, isAdmin, upload.single('flyer
         res.status(200).json({ message: 'Event updated successfully.', event: updatedEvent });
     } catch (error) {
         console.error('Error updating event:', error);
-        if (req.file) {
-            try { await fs.unlink(req.file.path); } catch (unlinkErr) { console.error("Error deleting new flyer after failed update:", unlinkErr); }
-        }
         res.status(500).json({ error: 'Failed to update event.' });
     }
 });
@@ -551,9 +599,16 @@ app.delete('/api/submissions/:id', authenticateToken, isAdmin, async (req, res) 
     try {
         const deletedEvent = await Submission.findByIdAndDelete(req.params.id);
         if (!deletedEvent) return res.status(404).json({ message: 'Event not found.' });
+        
         if (deletedEvent.flyerImagePath) {
-             try { await fs.unlink(deletedEvent.flyerImagePath); } catch (unlinkErr) { console.error("Error deleting flyer image file:", unlinkErr); }
+             try { await fs.unlink(deletedEvent.flyerImagePath); } catch (unlinkErr) { console.error("Error deleting flyer image file:", unlinkErr.message); }
         }
+        if (deletedEvent.flyerImageThumbnailPath) {
+            try { await fs.unlink(deletedEvent.flyerImageThumbnailPath); } catch (unlinkErr) { console.error("Error deleting flyer thumbnail file:", unlinkErr.message); }
+       }
+       if (deletedEvent.flyerImagePlaceholderPath) {
+        try { await fs.unlink(deletedEvent.flyerImagePlaceholderPath); } catch (unlinkErr) { console.error("Error deleting flyer placeholder file:", unlinkErr.message); }
+   }
         res.status(200).json({ message: 'Event deleted successfully.' });
     } catch (error) {
         console.error("Error deleting event:", error);
@@ -649,14 +704,15 @@ app.post('/api/purchase-tickets', [
                 const formattedTime = formatTimeServer(ticket.eventTime);
                 const formattedDate = new Date(ticket.eventDate).toLocaleDateString();
                 guestTicketsHtml += `
-                    <div style="border: 1px solid #eee; padding: 15px; margin-bottom: 20px; border-radius: 8px; background-color: #f9f9f9; color: #333; font-family: sans-serif; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                        <p><strong>Event:</strong> ${ticket.eventName}</p>
-                        <p><strong>Date:</strong> ${formattedDate}</p>
-                        <p><strong>Time:</strong> ${formattedTime}</p>
-                        <p><strong>Ticket Type:</strong> ${ticket.ticketType}</p>
-                        <p><strong>Ticket ID:</strong> ${ticket.ticketId}</p>
-                        <p style="text-align: center;"><strong>QR Code:</strong></p>
-                        <img src="${qrCodeDataUrl}" alt="QR Code for Ticket ${ticket.ticketId}" style="display: block; margin: 0 auto; max-width: 150px;">
+                    <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 20px; border-radius: 8px; background-color: #ffffff; color: #333; font-family: sans-serif; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                        <p style="margin: 0 0 5px 0; font-size: 1.1em;"><strong>Event:</strong> ${ticket.eventName}</p>
+                        <p style="margin: 0 0 5px 0;"><strong>Date:</strong> ${formattedDate}</p>
+                        <p style="margin: 0 0 5px 0;"><strong>Time:</strong> ${formattedTime}</p>
+                        <p style="margin: 0 0 5px 0;"><strong>Ticket Type:</strong> ${ticket.ticketType}</p>
+                        <p style="margin: 0 0 10px 0;"><strong>Ticket ID:</strong> ${ticket.ticketId}</p>
+                        <p style="margin: 0 0 5px 0; text-align: center;"><strong>QR Code:</strong></p>
+                        <img src="${qrCodeDataUrl}" alt="QR Code for Ticket ${ticket.ticketId}" style="display: block; margin: 0 auto; max-width: 150px; border: 1px solid #ddd; padding: 5px; background-color: #ffffff;">
+                        <small style="display: block; text-align: center; margin-top: 10px; color: #555;">Show this QR code at the event entrance for scanning.</small>
                     </div>
                 `;
             }
@@ -824,7 +880,7 @@ app.patch('/api/users/profile/password', authenticateToken, [
     }
 });
 
-app.get('/api/users/tickets', authenticateToken, async (req, res) => {
+app.get('/api/users/tickets', authenticateToken, isAdmin, async (req, res) => {
     try {
         const tickets = await Ticket.find({ userId: req.user.userId })
             .populate('eventId', 'eventName eventDate eventTime flyerImagePath')
@@ -841,7 +897,7 @@ app.get('/api/users/tickets', authenticateToken, async (req, res) => {
         }));
         res.status(200).json(formattedTickets);
     } catch (error) {
-        console.error("Server error fetching tickets:", error);
+        console.error("Error fetching tickets:", error);
         res.status(500).json({ message: 'Server error fetching tickets.' });
     }
 });
