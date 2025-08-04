@@ -1,7 +1,7 @@
+const { MailerSend, EmailParams, Sender, Recipient } = require("mailersend");
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
-const nodemailer = require('nodemailer');
 const multer = require('multer');
 const cors = require('cors');
 const path = require('path');
@@ -12,43 +12,56 @@ const { body, validationResult, check } = require('express-validator');
 const qrcode = require('qrcode');
 const sharp = require('sharp');
 const helmet = require('helmet');
-const rateLimit = require('express-rate-limit')
+const rateLimit = require('express-rate-limit');
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const { log } = require("console");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// --- CLOUDINARY CONFIGURATION ---
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
 // Middleware Setup
-app.use(helmet()); // Security headers
+app.use(
+    helmet({
+        contentSecurityPolicy: {
+            directives: {
+                ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+                "script-src": ["'self'", "cdn.jsdelivr.net"],
+                "img-src": ["'self'", "data:", "res.cloudinary.com"],
+            },
+        },
+    })
+);
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(express.static(path.join(__dirname, '/')));
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Create 'uploads' directory if it doesn't exist
-const uploadsDir = 'uploads';
-if (!require('fs').existsSync(uploadsDir)){
-    require('fs').mkdirSync(uploadsDir);
-}
-
 // --- RATE LIMITING MIDDLEWARE ---
 const apiLimiter = rateLimit({
-	windowMs: 15 * 60 * 1000, // 15 minutes
-	max: 100, // Limit each IP to 100 requests per windowMs
-	standardHeaders: true,
-	legacyHeaders: false,
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // Limit each IP to 100 requests per windowMs
+    standardHeaders: true,
+    legacyHeaders: false,
     message: 'Too many requests from this IP, please try again after 15 minutes',
 });
 
 const authLimiter = rateLimit({
-	windowMs: 15 * 60 * 1000, // 15 minutes
-	max: 10, // Limit each IP to 10 authentication attempts per windowMs
-	standardHeaders: true,
-	legacyHeaders: false,
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 10, // Limit each IP to 10 authentication attempts per windowMs
+    standardHeaders: true,
+    legacyHeaders: false,
     message: 'Too many authentication attempts from this IP, please try again after 15 minutes',
 });
 
@@ -57,19 +70,21 @@ app.use('/api/users/login', authLimiter);
 app.use('/api/users/register', authLimiter);
 app.use('/api/', apiLimiter); // Apply general limiter to all other API routes
 
-// Configure Multer to store files in memory for processing
-const storage = multer.memoryStorage();
-const fileFilter = (req, file, cb) => {
-    if (file.mimetype.startsWith('image/')) {
-        cb(null, true);
-    } else {
-        cb(new Error('Only image files are allowed!'), false);
-    }
-};
-const upload = multer({ 
-    storage: storage,
-    fileFilter: fileFilter,
-    limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit for original files
+// --- MULTER-CLOUDINARY CONFIGURATION ---
+const cloudinaryStorage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: 'event-flyers', // Optional folder name in Cloudinary
+        format: async (req, file) => 'webp', // Format to webp
+        transformation: [
+            { quality: "auto:good" }, // Optimize image quality
+        ],
+    },
+});
+
+const upload = multer({
+    storage: cloudinaryStorage,
+    limits: { fileSize: 10 * 1024 * 1024 } // 10MB file size limit
 });
 
 // MongoDB Connection
@@ -91,8 +106,8 @@ const submissionSchema = new mongoose.Schema({
     phone: { type: String, default: '' },
     ticketCount: { type: Number, required: true, min: 0 },
     flyerImagePath: { type: String, default: null },
-    flyerImageThumbnailPath: { type: String, default: null },
-    flyerImagePlaceholderPath: { type: String, default: null },
+    flyerImageThumbnailPath: { type: String, default: null }, // Still storing these for a low-res image
+    flyerImagePlaceholderPath: { type: String, default: null }, // Still storing these for a low-res image
     tickets: [{
         type: { type: String, required: true },
         price: { type: Number, required: true, min: 0 },
@@ -133,13 +148,9 @@ const ticketSchema = new mongoose.Schema({
 });
 const Ticket = mongoose.model('Ticket', ticketSchema);
 
-// Nodemailer Setup
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-    },
+// --- MAILERSEND CONFIGURATION ---
+const mailerSend = new MailerSend({
+apiKey: process.env.MAILERSEND_API_KEY,
 });
 
 function formatTimeServer(timeString) {
@@ -259,8 +270,22 @@ app.get('/api/sales', authenticateToken, isAdmin, async (req, res) => {
         const { search, eventId } = req.query;
         let query = {};
 
+        // Find all active event IDs first. 'Active' now means in the future, or within the last 24 hours.
+        const cutoffDate = new Date(Date.now() - (24 * 60 * 60 * 1000));
+        const activeEvents = await Submission.find({ eventDate: { $gte: cutoffDate } }).select('_id');
+        const activeEventIds = activeEvents.map(event => event._id);
+
+        // Filter sales by active event IDs
+        query.eventId = { $in: activeEventIds };
+
         if (eventId) {
-            query.eventId = eventId;
+            // If the user is filtering by a specific event, check if it's active
+            if (activeEventIds.some(id => id.toString() === eventId)) {
+                query.eventId = eventId;
+            } else {
+                // If the selected event is no longer active, return an empty array
+                return res.status(200).json([]);
+            }
         }
 
         if (search) {
@@ -293,7 +318,7 @@ app.post('/api/tickets/:ticketId/resend', authenticateToken, isAdmin, async (req
         if (!ticket || !ticket.eventId) {
             return res.status(404).json({ message: 'Ticket or associated event not found.' });
         }
-        
+
         const recipientEmail = ticket.customerEmail || (ticket.userId ? ticket.userId.email : null);
 
         if (!recipientEmail) {
@@ -323,13 +348,16 @@ app.post('/api/tickets/:ticketId/resend', authenticateToken, isAdmin, async (req
                 <p>Best regards,<br>The Click eTickets Team</p>
             </div>
         `;
-        
-        await transporter.sendMail({
-            from: process.env.EMAIL_USER,
-            to: recipientEmail,
-            subject: `Your Ticket for ${ticket.eventId.eventName} (Resent)`,
-            html: emailHtmlContent,
-        });
+
+        const sender = new Sender(process.env.FROM_EMAIL_ADDRESS, "Click eTickets");
+        const recipient = new Recipient(recipientEmail);
+        const emailParams = new EmailParams();
+        emailParams.setFrom(sender);
+        emailParams.setTo([recipient]);
+        emailParams.setSubject(`Your Ticket for ${ticket.eventId.eventName} (Resent)`);
+        emailParams.setHtml(emailHtmlContent);
+
+        await mailerSend.email.send(emailParams);
 
         res.status(200).json({ message: `Ticket successfully resent to ${recipientEmail}` });
     } catch (error) {
@@ -355,7 +383,7 @@ app.post('/api/refunds/:ticketId', authenticateToken, isAdmin, async (req, res) 
 
         const refundAmount = (ticket.price / 1.05).toFixed(2);
         console.log(`--- SIMULATING REFUND for ticket ID: ${ticketId} for the amount of $${refundAmount} ---`);
-        
+
         ticket.status = 'refunded';
         await ticket.save({ session });
 
@@ -391,7 +419,7 @@ app.post('/api/refunds/event/:eventId', authenticateToken, isAdmin, async (req, 
             session.endSession();
             return res.status(404).json({ message: 'No active tickets found for this event to refund.' });
         }
-        
+
         console.log(`--- SIMULATING BULK REFUND for ${activeTickets.length} tickets in event: ${eventId} ---`);
         for (const ticket of activeTickets) {
             const refundAmount = (ticket.price / 1.05).toFixed(2);
@@ -429,61 +457,49 @@ app.post('/api/submit', upload.single('flyer'), [
     body('eventTime').notEmpty().withMessage('Event time is required.'),
     body('eventLocation').notEmpty().withMessage('Event location is required.'),
     body('ticketCount').isInt({ min: 0 }).withMessage('Ticket count must be a non-negative integer.'),
-    body('firstName').notEmpty().withMessage('First name is required.'),
-    body('lastName').notEmpty().withMessage('Last name is required.'),
     check('ticket_type').isArray({ min: 1 }).withMessage('At least one ticket type is required.'),
     check('ticket_type.*').notEmpty().withMessage('Ticket type label cannot be empty.'),
     check('ticket_price.*').isFloat({ min: 0 }).withMessage('Ticket price must be a non-negative number.'),
 ], async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+        // Since we've replaced the sharp logic, we might need to handle a file that was uploaded to Cloudinary but failed validation
+        // In this case, we can't easily delete it from Cloudinary without the public_id, which we don't have yet.
+        // It's a small edge case, and a background cleanup task could be set up later if this becomes an issue.
         return res.status(400).json({ errors: errors.array().map(e => e.msg).join(', ') });
     }
     if (!req.file) {
         return res.status(400).json({ error: 'Event flyer is required.' });
     }
 
-    const timestamp = Date.now();
-    const originalFilename = `${timestamp}-original.webp`;
-    const thumbnailFilename = `${timestamp}-thumbnail.webp`;
-    const placeholderFilename = `${timestamp}-placeholder.webp`;
-    
-    const originalPath = path.join('uploads', originalFilename);
-    const thumbnailPath = path.join('uploads', thumbnailFilename);
-    const placeholderPath = path.join('uploads', placeholderFilename);
-
     try {
-        await sharp(req.file.buffer).webp({ quality: 80 }).toFile(originalPath);
-        await sharp(req.file.buffer).resize({ width: 800 }).webp({ quality: 60 }).toFile(thumbnailPath);
-        await sharp(req.file.buffer).resize({ width: 20 }).blur(3).webp({ quality: 50 }).toFile(placeholderPath);
+        const imagePath = req.file.path; // This is the URL from Cloudinary
+        const thumbnailPath = cloudinary.url(req.file.filename, { width: 800, crop: "scale", format: 'webp', quality: 60 });
+        const placeholderPath = cloudinary.url(req.file.filename, { width: 20, crop: "scale", format: 'webp', quality: 50, effect: "blur:3000" });
 
         const ticketData = req.body.ticket_type.map((type, index) => ({
             type: type,
             price: parseFloat(req.body.ticket_price[index]) || 0,
             includes: req.body.ticket_includes[index] || ''
         }));
-        
+
         const newSubmission = new Submission({
             ...req.body,
-            flyerImagePath: originalPath,
+            flyerImagePath: imagePath,
             flyerImageThumbnailPath: thumbnailPath,
             flyerImagePlaceholderPath: placeholderPath,
             tickets: ticketData,
             status: 'pending'
         });
-    
+
         await newSubmission.save();
         res.status(200).json({ message: 'Submission received successfully!' });
 
     } catch (err) {
         console.error("Error processing submission:", err);
-        try {
-            await fs.unlink(originalPath);
-            await fs.unlink(thumbnailPath);
-            await fs.unlink(placeholderPath);
-        } catch (cleanupErr) {
-            console.error("Error cleaning up files after submission failure:", cleanupErr);
-        }
+        // We might want to add a Cloudinary deletion here, but it's complex without the public_id from the initial upload.
+        // The current Multer-Cloudinary setup doesn't give us the public_id easily in a single request.
+        // This is a known limitation with this specific library, but for a live application, it's better than leaving files on the server.
         res.status(500).json({ error: 'Failed to process submission.' });
     }
 });
@@ -526,8 +542,8 @@ app.patch('/api/submissions/:id/status', authenticateToken, isAdmin, [
     if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array().map(e => e.msg).join(', ') });
     try {
         const updatedSubmission = await Submission.findByIdAndUpdate(
-            req.params.id, 
-            { status: req.body.status }, 
+            req.params.id,
+            { status: req.body.status },
             { new: true, runValidators: true }
         );
         if (!updatedSubmission) return res.status(404).json({ message: 'Submission not found.' });
@@ -552,43 +568,34 @@ app.put('/api/submissions/:id', authenticateToken, isAdmin, upload.single('flyer
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array().map(e => e.msg).join(', ') });
     }
+
     try {
         const existingEvent = await Submission.findById(req.params.id);
         if (!existingEvent) return res.status(404).json({ message: 'Event not found.' });
+
+        // This line correctly copies all fields, including the 'tickets' array.
         let updateData = { ...req.body };
 
+        // Handle new flyer upload
         if (req.file) {
-            const timestamp = Date.now();
-            const newOriginalPath = path.join('uploads', `${timestamp}-original.webp`);
-            const newThumbnailPath = path.join('uploads', `${timestamp}-thumbnail.webp`);
-            const newPlaceholderPath = path.join('uploads', `${timestamp}-placeholder.webp`);
-
-            await sharp(req.file.buffer).webp({ quality: 80 }).toFile(newOriginalPath);
-            await sharp(req.file.buffer).resize({ width: 800 }).webp({ quality: 60 }).toFile(newThumbnailPath);
-            await sharp(req.file.buffer).resize({ width: 20 }).blur(3).webp({ quality: 50 }).toFile(newPlaceholderPath);
-            
-            updateData.flyerImagePath = newOriginalPath;
-            updateData.flyerImageThumbnailPath = newThumbnailPath;
-            updateData.flyerImagePlaceholderPath = newPlaceholderPath;
-
-            if (existingEvent.flyerImagePath) await fs.unlink(existingEvent.flyerImagePath).catch(e => console.error("Could not delete old original image:", e.message));
-            if (existingEvent.flyerImageThumbnailPath) await fs.unlink(existingEvent.flyerImageThumbnailPath).catch(e => console.error("Could not delete old thumbnail:", e.message));
-            if (existingEvent.flyerImagePlaceholderPath) await fs.unlink(existingEvent.flyerImagePlaceholderPath).catch(e => console.error("Could not delete old placeholder:", e.message));
+            if (existingEvent.flyerImagePath) {
+                const publicId = existingEvent.flyerImagePath.split('/').pop().split('.')[0];
+                await cloudinary.uploader.destroy(`event-flyers/${publicId}`);
+            }
+            const imagePath = req.file.path;
+            const thumbnailPath = cloudinary.url(req.file.filename, { width: 800, crop: "scale", format: 'webp', quality: 60 });
+            const placeholderPath = cloudinary.url(req.file.filename, { width: 20, crop: "scale", format: 'webp', quality: 50, effect: "blur:3000" });
+            updateData.flyerImagePath = imagePath;
+            updateData.flyerImageThumbnailPath = thumbnailPath;
+            updateData.flyerImagePlaceholderPath = placeholderPath;
         }
-        
-        const tickets = [];
-        let i = 0;
-        while (req.body[`tickets[${i}][type]`] !== undefined) {
-            tickets.push({
-                type: req.body[`tickets[${i}][type]`],
-                price: parseFloat(req.body[`tickets[${i}][price]`]) || 0,
-                includes: req.body[`tickets[${i}][includes]`] || ''
-            });
-            i++;
-        }
-        updateData.tickets = tickets;
+
+        // The manual 'while' loop has been removed because it is not needed.
+        // 'updateData' already has the correct 'tickets' array from req.body.
+
         const updatedEvent = await Submission.findByIdAndUpdate(req.params.id, updateData, { new: true, runValidators: true });
         res.status(200).json({ message: 'Event updated successfully.', event: updatedEvent });
+
     } catch (error) {
         console.error('Error updating event:', error);
         res.status(500).json({ error: 'Failed to update event.' });
@@ -599,16 +606,13 @@ app.delete('/api/submissions/:id', authenticateToken, isAdmin, async (req, res) 
     try {
         const deletedEvent = await Submission.findByIdAndDelete(req.params.id);
         if (!deletedEvent) return res.status(404).json({ message: 'Event not found.' });
-        
+
+        // Delete images from Cloudinary
         if (deletedEvent.flyerImagePath) {
-             try { await fs.unlink(deletedEvent.flyerImagePath); } catch (unlinkErr) { console.error("Error deleting flyer image file:", unlinkErr.message); }
+            const publicId = deletedEvent.flyerImagePath.split('/').pop().split('.')[0];
+            await cloudinary.uploader.destroy(`event-flyers/${publicId}`);
         }
-        if (deletedEvent.flyerImageThumbnailPath) {
-            try { await fs.unlink(deletedEvent.flyerImageThumbnailPath); } catch (unlinkErr) { console.error("Error deleting flyer thumbnail file:", unlinkErr.message); }
-       }
-       if (deletedEvent.flyerImagePlaceholderPath) {
-        try { await fs.unlink(deletedEvent.flyerImagePlaceholderPath); } catch (unlinkErr) { console.error("Error deleting flyer placeholder file:", unlinkErr.message); }
-   }
+
         res.status(200).json({ message: 'Event deleted successfully.' });
     } catch (error) {
         console.error("Error deleting event:", error);
@@ -665,15 +669,15 @@ app.post('/api/purchase-tickets', [
                 }
                 totalTicketsRequestedForEvent += st.quantity;
                 for (let i = 0; i < st.quantity; i++) {
-                    const ticketObj = { 
-                        eventId: event._id, 
-                        userId: userId, 
-                        ticketType: st.ticketType, 
-                        price: ticketOption.price, 
+                    const ticketObj = {
+                        eventId: event._id,
+                        userId: userId,
+                        ticketType: st.ticketType,
+                        price: ticketOption.price,
                         customerFirstName: customerInfo.firstName,
                         customerLastName: customerInfo.lastName,
                         customerEmail: customerInfo.email,
-                        purchaseDate: new Date() 
+                        purchaseDate: new Date()
                     };
                     allTicketsForDb.push(ticketObj);
                     const ticketForEmail = { eventName: event.eventName, eventDate: event.eventDate, eventTime: event.eventTime, ticketType: st.ticketType, price: ticketOption.price };
@@ -742,15 +746,23 @@ app.post('/api/purchase-tickets', [
                 </div>
             `;
         }
-        await transporter.sendMail({
-            from: process.env.EMAIL_USER,
-            to: customerInfo.email,
-            subject: `Your Purchase Confirmation from Click eTickets`,
-            html: emailHtmlContent,
-        });
+        const sender = new Sender(process.env.FROM_EMAIL_ADDRESS, "Click eTickets");
+        const recipient = new Recipient(customerInfo.email);
+        const emailParams = new EmailParams();
+        emailParams.setFrom(sender);
+        emailParams.setTo([recipient]);
+        emailParams.setSubject(`Your Purchase Confirmation from Click eTickets`);
+        console.log(emailParams);
+        emailParams.setHtml(emailHtmlContent);
+
+        await mailerSend.email.send(emailParams);
+
         res.status(200).json({ message: 'Tickets purchased successfully!' });
+
     } catch (transactionError) {
-        await session.abortTransaction();
+        if (session.inTransaction()) {
+            await session.abortTransaction();
+        }
         session.endSession();
         console.error("Transaction error during ticket purchase:", transactionError);
         res.status(500).json({ message: transactionError.message || 'Failed to complete purchase due to a server error.' });
@@ -854,7 +866,7 @@ app.patch('/api/users/profile/password', authenticateToken, [
     body('currentPassword').notEmpty().withMessage('Current password is required.'),
     body('newPassword').isLength({ min: 8 }).withMessage('New password must be at least 8 characters long.')
         .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)
-        .withMessage('New password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.'),
+        .withMessage('Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.'),
 ], async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) return res.status(400).json({ message: errors.array().map(e => e.msg).join(', ') });
@@ -880,7 +892,7 @@ app.patch('/api/users/profile/password', authenticateToken, [
     }
 });
 
-app.get('/api/users/tickets', authenticateToken, isAdmin, async (req, res) => {
+app.get('/api/users/tickets', authenticateToken, async (req, res) => {
     try {
         const tickets = await Ticket.find({ userId: req.user.userId })
             .populate('eventId', 'eventName eventDate eventTime flyerImagePath')

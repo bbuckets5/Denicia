@@ -117,6 +117,11 @@ document.addEventListener('DOMContentLoaded', () => {
         formData.delete('ticket_price[]');
         formData.delete('ticket_includes[]');
 
+        // Explicitly set the updated ticketCount to the FormData
+        // This ensures the value is sent to the server.
+        const newTicketCount = document.getElementById('ticketCount').value;
+        formData.set('ticketCount', newTicketCount); // ✅ THE FIX IS HERE
+
         const ticketEntries = ticketTypesWrapper.querySelectorAll('.ticket-type-entry');
         ticketEntries.forEach((entry, index) => {
             formData.append(`tickets[${index}][type]`, entry.querySelector('.ticket-label').value);

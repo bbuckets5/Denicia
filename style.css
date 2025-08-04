@@ -2177,3 +2177,124 @@ input[type="time"]::-webkit-calendar-picker-indicator { /* Added time input type
 .lazy-image.loaded {
     opacity: 1;
 }
+
+/*
+  CSS for mobile layout only.
+  Applies to screens 768px wide and smaller.
+*/
+@media (max-width: 768px) {
+  /* Hides the tagline on mobile. */
+  .tagline {
+    display: none;
+  }
+
+  /*
+    Adjusts the positioning and size for the user dropdown menu.
+    This should be working correctly.
+  */
+  .user-dropdown-menu {
+    max-width: calc(100vw - 10px);
+    right: 5px;
+    left: auto;
+    width: auto; /* Ensure no fixed width is causing issues */
+  }
+
+  /*
+    This is the targeted fix for the cart dropdown menu.
+    Using a very specific selector to override any other rules.
+  */
+  .main-header .cart-dropdown-menu {
+    /* Set a maximum width that fits the screen with a small margin */
+    max-width: calc(100vw - 4px);
+    width: auto; /* Override the fixed width from desktop */
+
+    /* Override all positioning and anchor the menu to the right */
+    left: auto;
+    right: 2px;
+  }
+
+  /* NEW: Fixes for the admin dashboard tabs on mobile */
+    .tabs-nav {
+        /* Makes the container scrollable horizontally on mobile */
+        overflow-x: auto;
+        /* Prevents the buttons from wrapping to the next line */
+        flex-wrap: nowrap;
+        /* Aligns the buttons to the left */
+        justify-content: flex-start;
+        /* Adds a little space to the left of the first button */
+        padding-left: 10px;
+        /* Hides the scrollbar on Webkit browsers (Chrome, Safari) for a cleaner look */
+        -webkit-overflow-scrolling: touch;
+        -ms-overflow-style: none; /* Hide scrollbar for IE and Edge */
+        scrollbar-width: none; /* Hide scrollbar for Firefox */
+    }
+
+    /* Style for the buttons inside the scrolling container */
+    .tab-btn {
+        /* Prevents the buttons from shrinking */
+        flex-shrink: 0;
+        /* Reduces the padding to make the buttons smaller vertically */
+        padding: 8px 15px;
+        /* Prevents the button text from wrapping */
+        white-space: nowrap;
+        /* Reduces the font size for a better fit on mobile */
+        font-size: 0.9rem;
+    }
+
+    /* Hide scrollbar for tabs-nav for a cleaner look */
+    .tabs-nav::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* This rule targets all CTA buttons within your admin dashboard. */
+    .admin-section .cta-button, .admin-form .cta-button {
+        padding: 5px 5px; /* Reduced vertical and horizontal padding */
+        font-size: 0.8rem; /* Smaller font size */
+    }
+
+    /* Adjusts the ticket option layout for mobile */
+
+    /* ✅ NEW RULE: Remove default padding from the list container */
+  .ticket-options-list {
+    padding: 0;
+  }
+
+  .ticket-option {
+    flex-direction: column;
+    align-items: center;
+    gap: 16px; 
+  }
+
+  .ticket-info {
+    text-align: center;
+  }
+
+  .ticket-controls {
+    width: 100%;
+    justify-content: center;
+  }/* ✅ NEW RULE: Remove default padding from the list container */
+  .ticket-options-list {
+    padding: 0;
+  }
+
+  .ticket-option {
+    flex-direction: column;
+    align-items: center;
+    gap: 16px; 
+  }
+
+  .ticket-info {
+    text-align: center;
+  }
+
+  .ticket-controls {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .ticket-options-list {
+    /* Change the two-column grid to a single column on mobile */
+    grid-template-columns: 1fr;
+  }
+}
+

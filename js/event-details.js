@@ -1,4 +1,3 @@
-// js/event-details.js
 document.addEventListener('DOMContentLoaded', () => {
     // Selectors for initially existing elements that will be populated
     const eventDetailsContainer = document.querySelector('.event-details-container'); // The main wrapper for event details
@@ -120,7 +119,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Populate event details (elements already exist, just set their values)
             document.title = `${event.eventName} - Click eTickets`;
-            eventImage.src = `/${event.flyerImagePath || 'path/to/default-event-image.jpg'}`; // Add a fallback image if flyerImagePath is empty
+            // FIX: The leading slash has been removed here.
+            eventImage.src = event.flyerImagePath || 'path/to/default-event-image.jpg'; // Add a fallback image if flyerImagePath is empty
             eventName.textContent = event.eventName || '';
             eventDateTime.innerHTML = `
                 <i class="fas fa-calendar-alt"></i> ${new Date(event.eventDate).toLocaleDateString()}
