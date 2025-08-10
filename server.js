@@ -1,3 +1,4 @@
+console.log("--- SERVER.JS FILE IS EXECUTING ---");
 const { MailerSend, EmailParams, Sender, Recipient } = require("mailersend");
 require('dotenv').config();
 const express = require('express');
