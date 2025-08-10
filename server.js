@@ -25,6 +25,43 @@ app.use((req, res, next) => {
 });
 const PORT = process.env.PORT || 3000;
 
+// --- DIAGNOSTIC ROUTE ---
+app.get('/api/diagnostic', async (req, res) => {
+  const results = {
+    env: {},
+    db: {},
+  };
+
+  // 1. Check for required environment variables
+  const requiredEnvVars = [
+    'DB_CONNECTION_STRING',
+    'CLOUDINARY_CLOUD_NAME',
+    'MAILERSEND_API_KEY',
+    'JWT_SECRET' // Assuming you have a JWT_SECRET for login
+  ];
+
+  requiredEnvVars.forEach(varName => {
+    results.env[varName] = process.env[varName] ? '✅ Set' : '❌ MISSING';
+  });
+
+  // 2. Test the Database Connection
+  try {
+    if (!process.env.DB_CONNECTION_STRING) {
+      throw new Error("DB_CONNECTION_STRING is not set in Vercel.");
+    }
+    // Try to connect with a short timeout
+    await mongoose.connect(process.env.DB_CONNECTION_STRING, { serverSelectionTimeoutMS: 5000 });
+    results.db.connection = '✅ Success! Connected to MongoDB.';
+    // Disconnect after the test
+    await mongoose.disconnect();
+  } catch (error) {
+    results.db.connection = `❌ FAILED: ${error.message}`;
+  }
+
+  res.status(200).json(results);
+});
+// -------------------------
+
 // --- CLOUDINARY CONFIGURATION ---
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
