@@ -1,13 +1,17 @@
+// At the top of the file, we import the new library.
+import imageCompression from 'browser-image-compression';
+
 document.addEventListener('DOMContentLoaded', () => {
     const showCustomAlert = window.showCustomAlert;
     const promoterForm = document.getElementById('event-submission-form');
     const addTicketBtn = document.getElementById('add-ticket-type');
     const ticketTypesWrapper = document.getElementById('ticket-types-wrapper');
     const submitButton = document.getElementById('submit-event-btn');
+    // We need to select the file input to get the image
+    const flyerInput = document.getElementById('flyer');
 
     /**
      * Creates and appends a new ticket type entry to the form.
-     * This function is now the single source for creating these fields.
      */
     function addTicketEntry() {
         const newEntry = document.createElement('div');
@@ -44,31 +48,61 @@ document.addEventListener('DOMContentLoaded', () => {
         event.preventDefault();
 
         submitButton.disabled = true;
-        submitButton.textContent = 'Submitting...';
-        showCustomAlert("Processing", "Submitting your event. Please wait...", 'info');
+        submitButton.textContent = 'Processing...';
+        showCustomAlert("Processing", "Compressing image and submitting. Please wait...", 'info');
 
-        const formData = new FormData(promoterForm);
-        
+        const imageFile = flyerInput.files[0];
+        if (!imageFile) {
+            showCustomAlert("Validation Error", "Please select an event flyer.", 'error');
+            submitButton.disabled = false;
+            submitButton.textContent = 'Submit Event';
+            return;
+        }
+
+        // --- NEW: IMAGE COMPRESSION LOGIC ---
+        const options = {
+            maxSizeMB: 2,          // Max file size in megabytes
+            maxWidthOrHeight: 1920, // Max width or height
+            useWebWorker: true,
+        };
+
         try {
+            console.log(`Original file size: ${(imageFile.size / 1024 / 1024).toFixed(2)} MB`);
+            const compressedFile = await imageCompression(imageFile, options);
+            console.log(`Compressed file size: ${(compressedFile.size / 1024 / 1024).toFixed(2)} MB`);
+
+            // Build the FormData and replace the original file with the compressed one
+            const formData = new FormData(promoterForm);
+            formData.set('flyer', compressedFile, compressedFile.name); 
+
             const response = await fetch('/api/submit', {
                 method: 'POST',
                 body: formData,
             });
+            
+            // --- MODIFIED: Better error handling ---
+            if (!response.ok) {
+                // If the server sends back a non-JSON error (like the 413 error page)
+                const errorText = await response.text();
+                throw new Error(errorText || 'An unknown error occurred.');
+            }
 
             const result = await response.json();
+            showCustomAlert("Success!", result.message || 'Event submitted successfully!', 'success', () => {
+                promoterForm.reset();
+                ticketTypesWrapper.innerHTML = '';
+                addTicketEntry();
+            });
 
-            if (response.ok) {
-                showCustomAlert("Success!", result.message || 'Event submitted successfully!', 'success', () => {
-                    promoterForm.reset();
-                    ticketTypesWrapper.innerHTML = ''; // Clear all ticket entries
-                    addTicketEntry(); // Add one fresh, empty entry back
-                });
-            } else {
-                throw new Error(result.error || result.errors || 'An unknown error occurred.');
-            }
-        } catch (error) {
+        } catch (error) { {
             console.error('A critical error occurred during submission:', error);
-            showCustomAlert("Submission Error", error.message, 'error');
+            // Check if the error is a JSON parsing error, which means we got a text/html response
+            if (error instanceof SyntaxError) {
+                showCustomAlert("Submission Error", "The server returned an unexpected response. The file might be too large.", 'error');
+            } else {
+                showCustomAlert("Submission Error", error.message, 'error');
+            }
+        }
         } finally {
             submitButton.disabled = false;
             submitButton.textContent = 'Submit Event';
@@ -76,7 +110,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- INITIALIZATION ---
-    // Ensure at least one ticket type entry is present when the page loads.
     if (ticketTypesWrapper) {
         addTicketEntry();
     }
